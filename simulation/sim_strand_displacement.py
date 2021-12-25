@@ -1,4 +1,5 @@
 import os
+import json
 from multistrand.objects import *
 from multistrand.options import Options, Literals
 from multistrand.system import SimSystem, energy
@@ -34,7 +35,7 @@ def create_options(toehold_seq, bm_seq):
 
 def get_trajectory(option):
   # The trajectory of the SD, strands sorted in the order appear in strand_order
-  trajectory = {"structs":[], "times":[], "energies":[]}
+  trajectory = {"Conformation":[], "Time":[], "Energy":[]}
   
   # The strands in this reaction, mainly for sorting purposes
   strand_order = []
@@ -88,17 +89,17 @@ def get_trajectory(option):
       new_trajectory += sign[strand_map[i]]
             
     # 4. UPDATE TRAJECTORY  
-    trajectory["structs"].append(new_trajectory.strip())
-    trajectory["times"].append(time)
-    trajectory["energies"].append(dG)
+    trajectory["Conformation"].append(new_trajectory.strip())
+    trajectory["Time"].append(time)
+    trajectory["Energy"].append(dG)
     
   return trajectory
 
-def print_trajactory(trajectory):
-  for i in range(len(trajectory["structs"])):
-    print '%s t=%f sec, dG=%6.2f kcal/mol' % (trajectory["structs"][i], trajectory["times"][i], trajectory["energies"][i])
-  
-  
+def save_json(json, file_name="sim_strand_displacement.json"):
+  file = open(file_name, "a")
+  file.write(json)
+  file.close()
+
 if __name__ == '__main__':
   toehold_seq = "TCTA"
   bm_seq = "TCGACT"
@@ -108,4 +109,5 @@ if __name__ == '__main__':
   system.start()
   trajectory = get_trajectory(option)
   
-print_trajactory(trajectory)
+  json = json.dumps(trajectory, indent=4)
+  save_json(json)
