@@ -108,4 +108,4 @@ if __name__ == '__main__':
   system.start()
   trajectory = get_trajectory(option)
   
-# print_trajactory(trajectory)
+print_trajactory(trajectory)
