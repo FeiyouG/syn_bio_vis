@@ -108,9 +108,9 @@ def simulate(toehold_seq, bm_seq):
 
   trajectory = get_trajectory(option)
 
-  json = json.dumps(trajectory, indent=4)
+  return trajectory
   #  save_json(json)
-  return json
+  #  return json
 
 #  if __name__ == '__main__':
 #    toehold_seq = "TCTA"
