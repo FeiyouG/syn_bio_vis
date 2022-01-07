@@ -44,8 +44,11 @@ Find out the IP Address of your machine by using the `host` command in your term
 
 Now, go to any browswer and type `[your IP adress]:5000` to access the server
 
-## APIS (Temporary, still working in progress)
+## APIs (Temporary, still working in progress)
 
 - Home page will print the word "HELLO"
-- `/json` will give you an example strand displacement data in json
-- `/base_seq/strand1_seq/strand2_seq` will give use a json file represent the simulation of a strand displacement between base, strand1, and strand2
+- `~/json` will give you an example strand displacement data in json
+- `~/toehold_seq/rest_seq` will give use a json file represent the simulation of a strand displacement
+  - `toehold_seq` is the sequence of the toehold region
+  - `rest_seq` is the sequence of the base besides toehold region
+  - The sequence of strand1 and strand2 will be generated automatically from the base sequence. We will allow more flexiblity in declaring strand sequences in later updates
