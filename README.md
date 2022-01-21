@@ -32,8 +32,8 @@ pip install Falsk
 
 Then run Flask as a public server
 ```
-export FLASK=server
-FLASK run -host=0.0.0.0
+export FLASK_APP=server
+flask run -host=0.0.0.0
 ```
 
 Flask runs on port 5000 by default.
