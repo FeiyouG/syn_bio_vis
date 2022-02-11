@@ -1,6 +1,6 @@
 import React, { useState, useRef } from "react"
 
-import { getSim } from './actions/simulation';
+// import { getSim } from './actions/simulation';
 
 function Simulation(){
   // Set up States

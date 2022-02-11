@@ -1,9 +1,10 @@
 import express from 'express';
 
+import { getSimRes, startSimReq } from '../controller/simulation.js';
+
 const router = express.Router();
 
-router.get('./', async (req, res) => {
-  res.status(200).json({simulation: "SIMULATION GOES HERE"});
-});
+router.get('./', getSimRes);
+router.post('./', startSimReq);
 
 export default router;
