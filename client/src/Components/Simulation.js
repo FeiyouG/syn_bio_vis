@@ -1,5 +1,7 @@
 import React, { useState, useRef } from "react"
 
+import { getSim } from './actions/simulation';
+
 function Simulation(){
   // Set up States
   const [simRes, setSimRes] = useState("");
@@ -34,6 +36,8 @@ function Simulation(){
       console.log("Invalid");
       return;
     }
+
+    setSimRes("Simulation Result goes here!");
   }
 
   return(
