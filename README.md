@@ -17,38 +17,29 @@ An interactive tool for teaching and learning molecular programming.
 
 **Lesson 7**: In the World
 
-## Setup the server
-We use [Flask](https://flask.palletsprojects.com/en/2.0.x/), a micro web framework, as our server, and [Multistrand](https://github.com/DNA-and-Natural-Algorithms-Group/multistrand) to run our simulations
+## Run this project
 
-### First, Swtich to python2 environement
+First, ensure `node.js` and `npm` are installed on your machine.
 
-Multistrand currenly only works with python2 version 2.7.12+. You can easily create a virual environment of python2.7 using [virtualenv](https://virtualenv.pypa.io/en/latest/)
-
-### Second, install and run Flask
-Install Flask with pip 
+Then, clone the project and `cd` to the folder *server*. Run the following
+command to install the dependencies for the server:
+```shell
+$ npm install express body-parser cors
 ```
-pip install Falsk
+After all packages are installed,
+run `npm start` to start the server. Make sure port 3000 is available as
+the server will run in port 3000 by default
+
+Next, `cd` to the folder *client* and run the following command to install all
+the dependencies:
+```shell
+$ npm install react react-dom reac-redux redux redux-thunk @material-ui/core axios
 ```
+Finally, run `npm start` on the client. The client uses port 3000 as default
+too, but it can automatically change to use another port if port 3000 isn't
+available.
 
-Then run Flask as a public server
-```
-export FLASK_APP=server
-flask run -host=0.0.0.0
-```
 
-Flask runs on port 5000 by default.
 
-### Finally, access the server
 
-Find out the IP Address of your machine by using the `host` command in your terminal.
 
-Now, go to any browswer and type `[your IP adress]:5000` to access the server
-
-## APIs (Temporary, still working in progress)
-
-- Home page will print the word "HELLO"
-- `~/json` will give you an example strand displacement data in json
-- `~/toehold_seq/rest_seq` will give use a json file represent the simulation of a strand displacement
-  - `toehold_seq` is the sequence of the toehold region
-  - `rest_seq` is the sequence of the base besides toehold region
-  - The sequence of strand1 and strand2 will be generated automatically from the base sequence. We will allow more flexiblity in declaring strand sequences in later updates
