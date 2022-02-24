@@ -1,16 +1,16 @@
 import axios from 'axios';
 
 // TODO: Change url for production code
-const url = 'http://localhost:3000/sim'
+const simUrl = 'http://localhost:3000/sim'
+
+// --------------------
+// MARK: GET REQUESTs
+// --------------------
 
 // export const runSim = () => axios.get(url);
-export const runSim = (newSim) => {
-  // axios.get(url, newSim);
-  axios.get(url, {
-    param: {
-      ID: 123
-    }
-  });
-}
 
-// export const runSim = (newSim) => axios.get(url, newSim);
+// --------------------
+// MARK: POST REQUESTs
+// --------------------
+
+export const runSim = (newSim) => axios.post(simUrl, newSim);

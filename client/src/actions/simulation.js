@@ -21,10 +21,12 @@ import * as api from '../api';
 // --------------------
 
 // Run a simulation in the server and returns the result as json
-export const runSim = (simData) => async (dispatch) => {
+export const runSim = (simData, drawSim) => async (dispatch) => {
   try {
+    // Set request to the server
     const { data } = await api.runSim(simData);
-    dispatch({ type: RUN_SIM, payload: data });
+    // Draw simulation using the data sent back from server
+    drawSim(data);
   } catch (error) {
     // TODO: Properly hanlde errors
     console.log(error.message);

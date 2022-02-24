@@ -1,6 +1,6 @@
-import React, { useState, useRef } from "react"
+import React, { useState } from "react";
 import { TextField, Button, Typography, Paper } from '@material-ui/core';
-import FileBase from 'react-file-base64';
+// import FileBase from 'react-file-base64';
 import { useDispatch } from 'react-redux';
 
 import { runSim } from '../../actions/simulation';
@@ -16,37 +16,42 @@ function Simulation(){
 
   const handleSubmit = (e) => {
     e.preventDefault(); // Avoid refreshing automatically on submit
-    dispatch(runSim(simData));
+    dispatch(runSim(simData, drawSim));
   }
 
   const handleClear = () => {
-    // Clear user input
+    setSimData({ top1: '', top2: '', base: '' })
+  }
+
+  const drawSim = (data) => {
+    console.log("Draw Simulation");
+    console.log(data);
   }
 
   return (
     <Paper>
       <form autoComplete="off" noValidate onSubmit={handleSubmit}>
-      <Typography variant="h6">Creating a Memory</Typography>
+      <Typography variant="h6">Run a simulation</Typography>
       <TextField
-          name="Top Strand 1"
+          name="top1"
           variant="outlined"
-          label="top1"
+          label="Top Strand 1"
           fullWidth
           value={simData.top1}
           onChange={ (e) => setSimData({ ...simData, top1: e.target.value }) }
           />
       <TextField
-          name="Top Strand 2"
+          name="top2"
           variant="outlined"
-          label="top2"
+          label="Top Strand 2"
           fullWidth
           value={simData.top2}
           onChange={ (e) => setSimData({ ...simData, top2: e.target.value }) }
           />
       <TextField
-          name="Base Strand"
+          name="base"
           variant="outlined"
-          label="base"
+          label="Base Strand"
           fullWidth
           value={simData.base}
           onChange={ (e) => setSimData({ ...simData, base: e.target.value }) }

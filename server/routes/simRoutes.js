@@ -14,7 +14,7 @@ const router = express.Router();
 // --------------------
 // MARK: Post REQUESTs
 // --------------------
-router.get('/', runSim);
+router.post('/', runSim);
 
 // Export router
 export default router;
