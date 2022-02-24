@@ -1,10 +1,20 @@
+// This module is an interface for routing
+
 import express from 'express';
 
-import { getSimRes, startSimReq } from '../controller/simulation.js';
+import { runSim } from '../controller/simulation.js';
 
 const router = express.Router();
 
-router.get('./', getSimRes);
-router.post('./', startSimReq);
+// --------------------
+// MARK: GET REQUESTs
+// --------------------
+// router.get('/', runSim);
 
+// --------------------
+// MARK: Post REQUESTs
+// --------------------
+router.get('/', runSim);
+
+// Export router
 export default router;

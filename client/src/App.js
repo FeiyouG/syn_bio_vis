@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Simulation from './Components/Simulation'
+import Simulation from './components/simulation/form'
 
 function App() {
   return (

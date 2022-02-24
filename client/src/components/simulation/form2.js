@@ -8,7 +8,7 @@ function Simulation(){
 
   // Set up references
   const seqRef = useRef({top1: "", top2: "", base: ""});
-  
+
   function handleInputChange(source, event) {
     const newSeq = event.target.value;
     switch (source) {
@@ -17,7 +17,7 @@ function Simulation(){
         break;
       case "top2":
         seqRef.current.top2 = newSeq;
-        break; 
+        break;
       case "base":
         seqRef.current.base = newSeq;
         break;
@@ -28,7 +28,7 @@ function Simulation(){
 
   function runSimulation() {
     const seq = seqRef.current;
-    
+
     console.log(seq);
 
     if (seq.top1 == "" || seq.top2 == "" || seq.base == "") {
