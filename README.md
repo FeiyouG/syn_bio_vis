@@ -33,13 +33,11 @@ the server will run in port 3000 by default
 Next, `cd` to the folder *client* and run the following command to install all
 the dependencies:
 ```shell
-$ npm install react react-dom reac-redux redux redux-thunk @material-ui/core axios
+$ npm install react react-dom reac-redux redux redux-thunk @material-ui/core axios d3
 ```
 Finally, run `npm start` on the client. The client uses port 3000 as default
 too, but it can automatically change to use another port if port 3000 isn't
 available.
 
-
-
-
-
+Please bear in mind that this project is still in early development stage, and
+the dependencies will likely to be changed frequently in the future.
