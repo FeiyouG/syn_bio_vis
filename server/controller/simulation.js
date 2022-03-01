@@ -1,4 +1,4 @@
-import { json } from "body-parser";
+// import { json } from "body-parser";
 const {PythonShell} = require('python-shell');
 
 export const getSimRes = async (req, res) => {
