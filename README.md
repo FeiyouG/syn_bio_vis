@@ -23,42 +23,17 @@ An interactive tool for teaching and learning molecular programming.
 
 First, ensure `node.js` and `npm` are installed on your machine.
 
-Then, clone and `cd` into the project.
-
-### Set up the server
-
-`cd` to the folder `server/`. Run
+Then, clone and `cd` into `syn_bio_vis/server/` and run
 ```shell
-$ npm init -y
+$npm install
 ```
-to initialize an empty `package.json` inside `server/`. Open and add the following lines to
-your `package.json`:
+to install all the dependencies for the server. Run `npm start` to start the
+server. The server is running in `port 3000` by default.
 
-```json
-"type": "module",
-"scripts": {
-  "start": "nodemon index.js"
-},
-```
-
-Next, run the following command to install the dependencies for the server:
+Next, `cd` into `syn_bio_vis/client` and run
 ```shell
-$ npm install express body-parser cors nodemon
+$npm install
 ```
-After all packages are installed,
-run `npm start` to start the server. Make sure `port 3000` is available as
-the server will run in `port 3000` by default
+to install all the dependencies for the server. Run `npm start` to start the
+client.
 
-### Set up the client
-
-`cd` to the folder `client/` and run the following command to install all
-the dependencies:
-```shell
-$ npm install react react-dom react-redux redux redux-thunk @material-ui/core axios d3
-```
-Finally, run `npm start` on the client. The client uses port 3000 as default
-too, but it can automatically change to use another port if port 3000 isn't
-available.
-
-Please bear in mind that this project is still in early development stage, and
-the dependencies will likely to be changed frequently in the future.
