@@ -19,21 +19,42 @@ An interactive tool for teaching and learning molecular programming.
 
 ## Run this project
 
+### Prerequisite
+
 First, ensure `node.js` and `npm` are installed on your machine.
 
-Then, clone the project and `cd` to the folder *server*. Run the following
-command to install the dependencies for the server:
+Then, clone and `cd` into the project.
+
+### Set up the server
+
+`cd` to the folder `server/`. Run
 ```shell
-$ npm install express body-parser cors
+$ npm init -y
+```
+to initialize an empty `package.json` inside `server/`. Open and add the following lines to
+your `package.json`:
+
+```json
+"type": "module",
+"scripts": {
+  "start": "nodemon index.js"
+},
+```
+
+Next, run the following command to install the dependencies for the server:
+```shell
+$ npm install express body-parser cors nodemon
 ```
 After all packages are installed,
-run `npm start` to start the server. Make sure port 3000 is available as
-the server will run in port 3000 by default
+run `npm start` to start the server. Make sure `port 3000` is available as
+the server will run in `port 3000` by default
 
-Next, `cd` to the folder *client* and run the following command to install all
+### Set up the client
+
+`cd` to the folder `client/` and run the following command to install all
 the dependencies:
 ```shell
-$ npm install react react-dom reac-redux redux redux-thunk @material-ui/core axios d3
+$ npm install react react-dom react-redux redux redux-thunk @material-ui/core axios d3
 ```
 Finally, run `npm start` on the client. The client uses port 3000 as default
 too, but it can automatically change to use another port if port 3000 isn't
