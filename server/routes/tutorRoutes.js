@@ -9,12 +9,11 @@ const router = express.Router();
 // --------------------
 // MARK: GET REQUESTs
 // --------------------
-// router.get('/', runSim);
+router.get('/', getTutorial);
 
 // --------------------
 // MARK: Post REQUESTs
 // --------------------
-router.get('/', getTutorial);
 
 // Export router
 export default router;

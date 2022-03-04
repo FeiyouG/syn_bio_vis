@@ -9,7 +9,6 @@ const router = express.Router();
 // --------------------
 // MARK: GET REQUESTs
 // --------------------
-// router.get('/', runSim);
 
 // --------------------
 // MARK: Post REQUESTs

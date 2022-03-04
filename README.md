@@ -19,8 +19,6 @@ An interactive tool for teaching and learning molecular programming.
 
 ## Run this project
 
-### Prerequisite
-
 First, ensure `node.js` and `npm` are installed on your machine.
 
 Then, clone and `cd` into `syn_bio_vis/server/` and run
@@ -30,10 +28,11 @@ $npm install
 to install all the dependencies for the server. Run `npm start` to start the
 server. The server is running in `port 3000` by default.
 
-Next, `cd` into `syn_bio_vis/client` and run
+Next, `cd` into `syn_bio_vis/client/` and run
 ```shell
 $npm install
 ```
 to install all the dependencies for the server. Run `npm start` to start the
-client.
+client. A website will be opened in your default browser.
 
+## Contribute to this project

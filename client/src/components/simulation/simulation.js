@@ -44,7 +44,7 @@ function Simulation(){
   }
 
   // The Actual compoenent
-  return (
+    return (
     <div>
       <Paper>
         <form autoComplete="off" noValidate onSubmit={handleSubmit}>
