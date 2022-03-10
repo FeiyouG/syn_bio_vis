@@ -7,20 +7,20 @@
 // MARK: GET REQUESTs
 // --------------------
 
-
-// --------------------
-// MARK: POST REQUEST
-// --------------------
-
 // Run a simulation and return the result to client
 export const getTutorial = async (req, res) => {
   try {
     console.log("Request ot get tutorial");
-    console.log(req.body);
     // Run the simulation here
-    res.status(200).json({ message: "Greeting from the Server 👋" })
+    res.status(200)
+    res.sendFile(req.params.lessonName + ".md", {root: './src/tutorial'})
   } catch (error) {
     // TODO: correctly handle error
     res.status(404).json({ message: error.message });
   }
 }
+
+// --------------------
+// MARK: POST REQUEST
+// --------------------
+

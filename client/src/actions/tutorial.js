@@ -8,9 +8,10 @@ import * as api from '../api';
 // --------------------
 
 // Get tutorial by its ID
-export const getTutorial = (tutorialID) => async (dispatch) => {
+export const getTutorial = (tutorialName) => async (dispatch) => {
   try {
-    const { data } = await api.getTutorial(tutorialID);
+    const { data } = await api.getTutorial(tutorialName);
+    console.log(data)
   } catch (error) {
     // TODO: Properly hanlde errors
     console.log(error.message)

@@ -9,7 +9,7 @@ const router = express.Router();
 // --------------------
 // MARK: GET REQUESTs
 // --------------------
-router.get('/', getTutorial);
+router.get('/:lessonName', getTutorial);
 
 // --------------------
 // MARK: Post REQUESTs
