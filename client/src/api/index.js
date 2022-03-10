@@ -1,8 +1,8 @@
 import axios from 'axios';
 
 // TODO: Change url for production code
-const simUrl = 'http://localhost:3000/sim'
-const tutorUrl = 'http://localhost:3000/sim'
+const simUrl = 'http://localhost:3001/sim'
+const tutorUrl = 'http://localhost:3001/sim'
 
 // --------------------
 // MARK: GET REQUESTs

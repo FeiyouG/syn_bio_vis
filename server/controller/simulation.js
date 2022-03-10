@@ -1,3 +1,5 @@
+// const __dirname = dirname(__filename);
+
 // This module contains functions triggered by
 // simulation related post and get requests
 // NOTE: HTTP Status Code Lookup:
@@ -18,9 +20,12 @@ export const runSim = async (req, res) => {
     console.log("Start simulation");
     console.log(req.body);
     // Run the simulation here
-    res.status(200).json({ message: "Greeting from the Server 👋" })
+    // res.status(200).json({ message: "Greeting from the Server 👋" })
+    res.status(200);
+    res.sendFile('example.json', {root: './src'})
   } catch (error) {
     // TODO: correctly handle error
+    console.log(error)
     res.status(404).json({ message: error.message });
   }
 }
