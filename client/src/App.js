@@ -6,9 +6,9 @@ import {
   Link
 } from 'react-router-dom';
 
-import Home from './Components/home'
-import Simulation from './Components/simulation/simulation'
-import Tutorial from './Components/tutorial'
+import Home from './components/home'
+import Simulation from './components/simulation/simulation'
+import Tutorial from './components/tutorial'
 
 function App() {
   return (
