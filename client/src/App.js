@@ -7,7 +7,7 @@ import {
 } from 'react-router-dom';
 
 import Home from './components/home'
-import Simulation from './components/simulation/simulation'
+import Simulation from './components/simulation'
 import Tutorial from './components/tutorial'
 
 function App() {
