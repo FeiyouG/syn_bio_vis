@@ -1,6 +1,6 @@
-# Lesson 1: Introduction to DNA Strand Displacement (DSD)
+# Lesson 3: Abstraction for DNA Circuits
 
-This is lesson 1
+This is lesson 3
 in the interactive curriculum
 Introduction to Molecular Programming
 

@@ -17,10 +17,10 @@
 // Run a simulation and return the result to client
 export const runSim = async (req, res) => {
   try {
-    console.log("Start simulation");
+    console.log("Request to tart a simulation with input:");
     console.log(req.body);
+
     // Run the simulation here
-    // res.status(200).json({ message: "Greeting from the Server 👋" })
     res.status(200);
     res.sendFile('example.json', {root: './src'})
   } catch (error) {
