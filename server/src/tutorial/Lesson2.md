@@ -1,6 +1,6 @@
-# Lesson 1: DNA Hybridization and Synthesis
+# Lesson 2: DNA Hybridization and Synthesis
 
-This is lesson 1
+This is lesson 2
 in the interactive curriculum
 Introduction to Molecular Programming
 
