@@ -1,4 +1,9 @@
 {
+  "sequences": [
+    "AGATAGCTGA",
+    "TCTATCGACT",
+    "AGCTGA"
+  ],
   "conformation": [
     "......((((+))))((((((+))))))",
     "......((((+)))).((((.+.)))).",

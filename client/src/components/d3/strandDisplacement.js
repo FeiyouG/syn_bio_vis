@@ -3,8 +3,6 @@ import * as d3 from "d3";
 
 import { useD3 } from '../../hooks/useD3';
 
-// The data will be in format :
-// Energy: {}, conformation: {}, time: {}
 function SDSimulation(props) {
   const data = parseData(props.data);
   const ref = useD3(
@@ -102,31 +100,85 @@ function SDSimulation(props) {
   )
 
 }
-
-// Parse data to a list of objects used by d3 to draw simulation
+/**
+* Parse data into a list of objects that can be used by d3 to draw simulation
+*
+* @param  object  data  an object containing the information of the simulation
+*                       returned by the server in the following format:
+*                       { sequences:[], energy: [], conformation: [], time: []}
+* @return list          a list of object in the foloowing format:
+*                       {energy: 123, time: 123,
+*                       conformation: [
+*                           { nucleic_acid: A, strand_num: 0, index: 0,
+*                             comp_strand_num: 1, comp_index: 5 },
+*                           ...
+*                       ]}
+*/
 function parseData(data) {
   var arr = [];
 
   for (var i = 0; i < data.conformation.length; i++) {
     var state = {}
-    state.binding = parseDotParen(data.conformation[i])
+    state.binding = parseDotParen(data.conformation[i], data.sequences)
     state.energy = data.energy[i];
     state.time = data.time[i] * 1000; // Convert to ms
     arr.push(state);
   }
 
-  console.log(arr);
-
-  return arr
+  console.log(arr)
+  return arr;
 }
 
-// Takes a dot-paran conformation as input.
-// Returns a 2D array of tuples, each array is a strand
-// and each tuple specifies to which base this base binds to;
-// If a base doesn't bind to aynthing, its tuple wil be [-1. -1]
-function parseDotParen(dotParen) {
-  // var stack = [];
-  return [-1, -1]
+
+/**
+* Parse a dot-parenthesis representation to a list of objects that is easier
+* to be used to draw the simulation with d3.
+*
+* @param  string  dotParen  a dot-paranthesis representation of the secondary
+*                           structures of multiple DNA strands, concatenated
+*                           using "+" character.
+* @param  list    sequences a list of strings containing the neocleic acid
+*                           sequences of each strand; must be in the same order
+*                           as the strands in dotParen
+* @return list              A list of objects in the following fommat:
+*                           { nucleic_acid: A, strand_num: 0, index: 0,
+*                             comp_strand_num: 1, comp_index: 5 }
+*/
+function parseDotParen(dotParen, sequences) {
+  // NOTE:  This function currently only handles very simple dot-paren notations,
+  //        i.e. dot-paran that only includes ".", "(", ")", and "+".
+
+  // Split by "+" or space
+  var conformations = dotParen.split(/[/+ ]/);
+  var res = [];
+  var stack = [];
+
+  for (var i = 0; i < conformations.length; i++) {
+    var conformation = conformations[i];
+    var strand_info = []
+
+    for (var j = 0; j < conformation.length; j++) {
+      var note = conformation[j];
+
+      var na_info = {}
+      na_info.strand_num = i;
+      na_info.index = i % 2 == 0 ? j : conformation.length - j - 1;
+      na_info.nucleic_acid = sequences[i][na_info.index];
+
+      if (note == "(") {
+        stack.push(na_info);
+      } else if (note == ")") {
+        var comp_na = stack.pop();
+        na_info.comp_strand_num = comp_na.strand_num;
+        na_info.comp_index = comp_na.index;
+        comp_na.comp_strand_num = na_info.strand_num;
+        comp_na.comp_index = na_info.index;
+      }
+      strand_info.push(na_info);
+    }
+    res.push(strand_info);
+  }
+  return res;
 }
 
 export default SDSimulation;
