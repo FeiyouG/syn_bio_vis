@@ -11,7 +11,6 @@ import * as api from '../api';
 export const getTutorial = (tutorialName, setTutorial) => async (dispatch) => {
   try {
     const { data } = await api.getTutorial(tutorialName);
-    console.log(data)
     setTutorial(data)
   } catch (error) {
     // TODO: Properly hanlde errors
