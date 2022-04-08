@@ -25,7 +25,7 @@ and `npm` are installed on your machine
 
 Then, clone this project:
 ```shell
-$ git clone https://github.com/Exquisitian/syn_bio_vis.git
+$ git clone https://github.com/gfeiyou/syn_bio_vis.git
 ```
 
 ### Set up Server
