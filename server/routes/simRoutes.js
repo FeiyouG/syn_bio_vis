@@ -2,7 +2,7 @@
 
 import express from 'express';
 
-import { runSim } from '../controller/simulation.js';
+import { runSim, getSim } from '../controller/simulation.js';
 
 const router = express.Router();
 
@@ -14,6 +14,6 @@ const router = express.Router();
 // MARK: Post REQUESTs
 // --------------------
 router.post('/', runSim);
-
+router.get('/:simName', getSim);
 // Export router
 export default router;

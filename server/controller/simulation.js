@@ -1,5 +1,3 @@
-// const __dirname = dirname(__filename);
-
 // This module contains functions triggered by
 // simulation related post and get requests
 // NOTE: HTTP Status Code Lookup:
@@ -20,12 +18,26 @@ export const runSim = async (req, res) => {
     console.log("Request to tart a simulation with input:");
     console.log(req.body);
 
-    // Run the simulation here
+    // TODO: Run the simulation here
     res.status(200);
-    res.sendFile('example.json', {root: './src'})
+    res.sendFile('example.json', {root: './src/simulation'})
   } catch (error) {
     // TODO: correctly handle error
     console.log(error)
+    res.status(404).json({ message: error.message });
+  }
+}
+
+// Run a simulation and return the result to client
+export const getSim = async (req, res) => {
+  try {
+    const simName = req.params.simName
+    console.log("Request to get simulation/" + simName);
+
+    res.status(200)
+    res.sendFile(simName + ".json", {root: './src/simulation'})
+  } catch (error) {
+    // TODO: correctly handle error
     res.status(404).json({ message: error.message });
   }
 }

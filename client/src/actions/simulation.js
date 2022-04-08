@@ -24,3 +24,18 @@ export const runSim = (simData, setSimData) => async (dispatch) => {
     console.log(error.message);
   }
 }
+
+export const getSim = (simName, setSimData) => async (dispatch) => {
+  try {
+    // Set request to the server
+    const { data } = await api.getSim(simName)
+    // Draw simulation using the data sent back from server
+    setSimData(data);
+
+    return data;
+  } catch (error) {
+    // TODO: Properly hanlde errors
+    console.log(error.message);
+  }
+}
+

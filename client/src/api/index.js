@@ -8,9 +8,9 @@ const tutorUrl = 'http://localhost:3001/tutor'
 // MARK: GET REQUESTs
 // --------------------
 export const getTutorial = (tutorName) => axios.get(tutorUrl + "/" + tutorName)
-// export const runSim = () => axios.get(url);
 
 // --------------------
 // MARK: POST REQUESTs
 // --------------------
 export const runSim = (newSim) => axios.post(simUrl, newSim);
+export const getSim = (simName) => axios.get(simUrl + "/" + simName);

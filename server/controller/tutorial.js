@@ -10,7 +10,7 @@
 // Run a simulation and return the result to client
 export const getTutorial = async (req, res) => {
   try {
-    const tutorialName = req.params.lessonName;
+    const tutorialName = req.params.tutorialName;
     console.log("Request to get tutorial/" + tutorialName);
 
     res.status(200)
