@@ -78,14 +78,10 @@ by a collection of DNA strands
 to reliably release a specific output,
 a. k. a. DNA computation!
 
-`.pil format`
+<!-- `.pil format` -->
 ```SDSimulation
 {
-  "sequences": [
-    "AGATAGCTGA",
-    "TCTATCGACT"
-  ],
-  "simName": "example"
+  "name": "example.json"
 }
 ```
 

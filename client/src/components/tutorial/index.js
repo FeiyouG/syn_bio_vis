@@ -27,6 +27,14 @@ function Tutorial() {
   //   dispatch(getSim(simName, setSimData))
   // }
 
+  const codeblockRender = (props) => {
+
+  }
+
+  const simulationRedner = (props) => {
+
+  }
+
 
   // Acutal Compoenent
   return (
@@ -43,7 +51,7 @@ function Tutorial() {
 
             if (language == "SDSimulation") {
               const content = JSON.parse(children)
-              if (content.simName != 'undefined') {     // Has pre-defined simulation data
+              if (content.name != 'undefined') {     // Has pre-defined simulation data
                 var simData =
                   {strands: [], conformation: [], energy: [], time: []}
                 handleGetSim(content.simName, (data) => simData = data)
