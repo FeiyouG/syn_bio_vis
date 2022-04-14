@@ -1,3 +1,6 @@
+import {renderToStaticMarkup} from 'react-dom/server.js'
+import React from 'react'
+import Content from '../src/tutorial/test.mdx'
 // This module contains functions triggered by
 // tutorial related post and get requests
 // NOTE: HTTP Status Code Lookup:
@@ -14,6 +17,7 @@ export const getTutorial = async (req, res) => {
     console.log("Request to get tutorial/" + tutorialName);
 
     res.status(200)
+    // console.log(renderToStaticMarkup(React.createElement(Content)))
     res.sendFile(tutorialName + ".md", {root: './src/tutorial'})
   } catch (error) {
     // TODO: correctly handle error
