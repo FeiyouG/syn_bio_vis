@@ -32,7 +32,6 @@ export const getSim = (simName, setSimData) => async (dispatch) => {
     // Draw simulation using the data sent back from server
     setSimData(data);
 
-    return data;
   } catch (error) {
     // TODO: Properly hanlde errors
     console.log(error.message);

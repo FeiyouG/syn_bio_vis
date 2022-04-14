@@ -81,7 +81,7 @@ a. k. a. DNA computation!
 <!-- `.pil format` -->
 ```SDSimulation
 {
-  "name": "example.json"
+  "name": "example"
 }
 ```
 

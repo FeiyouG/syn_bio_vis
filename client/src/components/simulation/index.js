@@ -3,7 +3,7 @@ import { TextField, Button, Typography, Paper } from '@material-ui/core';
 // import FileBase from 'react-file-base64';
 import { useDispatch } from 'react-redux';
 
-import SDSimulation from '../d3/strandDisplacement'
+import SDSimulation from '../d3/SDSimulation'
 import { runSim } from '../../actions/simulation';
 // import useStyles from './Styles';
 

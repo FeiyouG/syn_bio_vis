@@ -11,13 +11,13 @@ function SDSimulation(props) {
   // const simulationRef = useD3((svg) => test(svg, data), [data]);
 
 
-  if (data.metadata.strands.length == 0) {
-    return (
-      <div>
-        <h1>NO DATA</h1>
-      </div>
-    )
-  }
+  // if (data.metadata.strands.length == 0) {
+  //   return (
+  //     <div>
+  //       <h1>NO DATA</h1>
+  //     </div>
+  //   )
+  // }
 
   return (
     <div id="SDSimulation">
