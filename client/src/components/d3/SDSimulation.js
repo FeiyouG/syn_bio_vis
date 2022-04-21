@@ -14,70 +14,104 @@ function SDSimulation(props) {
   // so that multiple simulation can be rendered on the same page
   const simId = props.id ?? uuid()
 
-  const simulationRef = useD3((svg) => drawSimulation(svg, data, simId), [data]);
-  const scatterPlotRef = useD3((svg) => drawScatterPlot(svg, data, simId), [data]);
+  // const simulationRef = useD3((svg) => drawSimulation(svg, data, simId), [data]);
+  // const engeryPlotRef = useD3((svg) => drawEnergyPlot(svg, data, simId), [data]);
+  // const sliderRef = useD3((svg) => drawController(svg, data, simId), [data]);
 
+  const simulationRef = useD3((svg) => {
+    const { simSize, setSimState } = drawSimulation(svg, data, simId);
 
-  // if (data.metadata.strands.length == 0) {
-  //   return (
-  //     <div>
-  //       <h1>NO DATA</h1>
-  //     </div>
-  //   )
-  // }
+    const plotTranslate = {x: 0, y:simSize.height}
+    const { plotSize, setPlotState } = drawEnergyPlot(svg, data, simId, plotTranslate);
+
+    const set_state = function(state) {
+      setSimState(state)
+      setPlotState(state)
+    }
+
+    const sliderTranslate = {x:0, y:simSize.height + plotSize.height}
+    drawController(svg, data, simId, sliderTranslate, set_state);
+  }, [data])
+
 
   return (
-    <div id="SDSimulation">
+    <div id={"SDSimulation-" + simId}>
       <svg
         ref={simulationRef}
-        title="Simulation"
+        title={"SDSimulation-" + simId}
         style={{
-          height: 500,
+          height: 1000,
           width: "100%",
           marginRight: "0px",
           marginLeft: "0px",
         }}
       >
-        <g className={"slider-" + simId} />
-        <g className={"bp_links-" + simId} />
-        <g className={"bb_links-" + simId} />
-        <g className={"nodes-" + simId} />
-      </svg>
+        <g id={"naSimulation-" + simId}>
+          <g className={"bp_links-" + simId} />
+          <g className={"bb_links-" + simId} />
+          <g className={"nodes-" + simId} />
+        </g>
 
-      <svg
-        ref={scatterPlotRef}
-        title="Scatter Plot"
-        style={{
-          height: 500,
-          width: "100%",
-          marginRight: "0px",
-          marginLeft: "0px",
-        }}
-      >
-        <g className={"plot-dots-" + simId} />
-        <g className={"plot-line-" + simId} />
-        <g className={"x-axis-" + simId} />
-        <g className={"y-axis-" + simId} />
+        <g id={"energyPlot-" + simId}>
+          <g className={"plot-dots-" + simId} />
+          <g className={"plot-line-" + simId} />
+          <g className={"x-axis-" + simId} />
+          <g className={"y-axis-" + simId} />
+        </g >
+
+        <g id={"slider-" + simId}>
+          <g className={"slider-" + simId} />
+        </g >
       </svg>
     </div>
   )
 }
 
-function drawController(svg, data, id) {
-
-}
-/**
-* Draw a scatter plot of energy vs time using data onto svg
-*/
-function drawScatterPlot(svg, data, id) {
-  const snapshots = data.snapshots;
+function drawController(svg, data, id, translate, callback) {
   const metadata = data.metadata;
+  const snapshots = data.snapshots;
 
   if (metadata.strands.length == 0) return;
 
   // Constants
-  const height = 500;
-  const width = 1000;
+  const sliderSize = {
+    width: 1000
+  }
+
+  // contruct the slider
+  const slider = sliderTop()
+    .min(0)
+    .max(snapshots.length - 1)
+    .step(1)
+    // .tickValues()
+    .width(sliderSize.width)
+    .on("end", i => callback(i))
+
+  if(translate != null) {
+    svg.select("#slider-" + id)
+      .attr("transform", `translate(${translate.x}, ${translate.y})`)
+  }
+  svg.select(".slider-" + id)
+    .attr("transform", "translate(10, 50)")
+    .call(slider);
+}
+/**
+* Draw a scatter plot of energy vs time using data onto svg
+*/
+function drawEnergyPlot(svg, data, id, translate) {
+  // Constants
+  const snapshots = data.snapshots;
+  const metadata = data.metadata;
+
+  const size = { height: 300, width: 1000 }
+
+  if (metadata.strands.length == 0) {
+    return {
+      plotSize: size,
+      setPlotState: function() { }
+    }
+  }
+
   const margin = { top: 20, right: 30, bottom: 30, left: 40 };
   const stroke_width = 1;
   const axis_text_size = 10;
@@ -85,22 +119,22 @@ function drawScatterPlot(svg, data, id) {
   const x_scale = d3
     .scaleLinear()
     .domain([0, d3.max(snapshots, d => d.time)]).nice()
-    .rangeRound([margin.left + stroke_width, width - margin.right])
+    .rangeRound([margin.left + stroke_width, size.width - margin.right])
 
   const y_scale = d3
     .scaleLinear()
     .domain([d3.min(snapshots, d => d.energy), d3.max(snapshots, d => d.energy)]).nice()
-    .rangeRound([height - margin.bottom, margin.top])
+    .rangeRound([size.height - margin.bottom, margin.top])
 
   const x_axis = (g) => g
-    .attr("transform", `translate(0, ${height - margin.bottom})`)
+    .attr("transform", `translate(0, ${size.height - margin.bottom})`)
     .call(d3.axisBottom(x_scale))
     .append('text')
     .attr('text-anchor', 'end')
     .attr('fill', 'black')
     .attr('font-size', axis_text_size)
     .attr('font-weight', 'bold')
-    .attr('x', width - margin.right)
+    .attr('x', size.width - margin.right)
     .attr('y', - margin.bottom / 4)
     .text('Time (ms)');
 
@@ -115,6 +149,11 @@ function drawScatterPlot(svg, data, id) {
     .attr('font-size', axis_text_size)
     .attr('font-weight', 'bold')
     .text('Energy (unit)');
+
+  if(translate != null) {
+    svg.select("#energyPlot-" + id)
+      .attr("transform", `translate(${translate.x}, ${translate.y})`)
+  }
 
   svg.select(".x-axis-" + id).call(x_axis);
   svg.select(".y-axis-" + id).call(y_axis);
@@ -141,20 +180,30 @@ function drawScatterPlot(svg, data, id) {
     .style("fill", "none")
     .style("stroke", "black")
     .style("stroke-width", 2)
+
+  return {
+    plotSize: size,
+    setPlotState: function() { }
+  }
+
 }
 
 /**
 * Draw a strand displacement simulation using data onto svg
 */
 function drawSimulation(svg, data, id) {
-  const snapshots = data.snapshots;
-  const metadata = data.metadata;
-
-  if (metadata.strands.length == 0) return;
 
   // Constants
-  const height = 500;
-  const width = 1000;
+  const metadata = data.metadata;
+  const snapshots = data.snapshots;
+  const size = { height: 300, width: 1000 }
+
+  if (metadata.strands.length == 0) {
+    return {
+      simSize: size,
+      setSimState: function() { }
+    }
+  }
 
   const na_radius = 12
   const na_fontSize = 15
@@ -165,18 +214,18 @@ function drawSimulation(svg, data, id) {
   const color = d3.scaleOrdinal(d3.schemePastel2)
 
 
-  // Construct the slider
-  const slider = sliderTop()
-    .min(0)
-    .max(snapshots.length - 1)
-    .step(1)
-    // .tickValues()
-    .width(width)
-    .on("end", i => set_state(i))
-
-  svg.select(".slider-" + id)
-    .attr("transform", "translate(10, 50)")
-    .call(slider);
+  // // Construct the slider
+  // const slider = sliderTop()
+  //   .min(0)
+  //   .max(snapshots.length - 1)
+  //   .step(1)
+  //   // .tickValues()
+  //   .width(width)
+  //   .on("end", i => set_state(i))
+  //
+  // svg.select(".slider-" + id)
+  //   .attr("transform", "translate(10, 50)")
+  //   .call(slider);
 
   // var nodes = map(snapshots.state, d => d.na_name);
   var nodes = snapshots[0].state.map(d => {
@@ -192,20 +241,12 @@ function drawSimulation(svg, data, id) {
     // .force('bb_link', d3.forceLink().links(filter_links("bb_link")).distance(na_dist).strength(1))
     // .force('bp_link', d3.forceLink().links(filter_links("bp_link")).distance(na_dist).strength(0.8))
     .force('collision', d3.forceCollide().radius(na_radius).strength(0.3))
-    .force('forceX', d3.forceX().x(width / 2))
-    .force('forceY', d3.forceY().y(height / 2))
+    .force('forceX', d3.forceX().x(size.width / 2))
+    .force('forceY', d3.forceY().y(size.height / 2))
     // .force("boundary", d3.forceRadial().radius(250).x(width / 2).y(height / 2).strength(0.05))
     .on('tick', ticked);
 
 
-  // Call back by slider when a new state is set
-  function set_state(i) {
-    links = get_links(i)
-    simulation.force("link").links(links)
-    // simulation.force("bb_link").links(filter_links("bb_link"))
-    // simulation.force("bp_link").links(filter_links("bp_link"))
-    simulation.alpha(0.05).restart()
-  }
 
   function get_links(i) {
     var bp_links = snapshots[i].state
@@ -279,8 +320,8 @@ function drawSimulation(svg, data, id) {
       .selectAll('circle')
       .data(nodes)
       .join('circle')
-      .attr('cx', d => d.x = Math.max(na_radius, Math.min(width - na_radius, d.x)))
-      .attr('cy', d => d.y = Math.max(na_radius, Math.min(width - na_radius, d.y)))
+      .attr('cx', d => d.x = Math.max(na_radius, Math.min(size.width - na_radius, d.x)))
+      .attr('cy', d => d.y = Math.max(na_radius, Math.min(size.width - na_radius, d.y)))
       .attr('r', na_radius)
       .style('fill', d => color(d.strand_id))
 
@@ -297,6 +338,19 @@ function drawSimulation(svg, data, id) {
       .style("fill", "white")
       .style("text-anchor", "middle")
   }
+
+  // Call back by slider when a new state is set
+  function setState(i) {
+    links = get_links(i)
+    simulation.force("link").links(links)
+    simulation.alpha(0.05).restart()
+  }
+
+  return {
+    simSize: size,
+    setSimState: setState
+  }
+
 
 }
 
