@@ -1,14 +1,21 @@
 import React from "react";
 import * as d3 from "d3";
 import { sliderTop } from "d3-simple-slider";
+import uuid from 'react-uuid'
 
 import { useD3 } from '../../hooks/useD3';
 
 function SDSimulation(props) {
+
+  // Parse data
   const data = parseData(props.data);
-  const simulationRef = useD3((svg) => drawSimulation(svg, data), [data]);
-  const scatterPlotRef = useD3((svg) => drawScatterPlot(svg, data), [data]);
-  // const simulationRef = useD3((svg) => test(svg, data), [data]);
+
+  // An uuid to make each simulation className unique
+  // so that multiple simulation can be rendered on the same page
+  const simId = props.id ?? uuid()
+
+  const simulationRef = useD3((svg) => drawSimulation(svg, data, simId), [data]);
+  const scatterPlotRef = useD3((svg) => drawScatterPlot(svg, data, simId), [data]);
 
 
   // if (data.metadata.strands.length == 0) {
@@ -31,10 +38,10 @@ function SDSimulation(props) {
           marginLeft: "0px",
         }}
       >
-        <g className="slider" />
-        <g className="bp_links" />
-        <g className="bb_links" />
-        <g className="nodes" />
+        <g className={"slider-" + simId} />
+        <g className={"bp_links-" + simId} />
+        <g className={"bb_links-" + simId} />
+        <g className={"nodes-" + simId} />
       </svg>
 
       <svg
@@ -47,20 +54,22 @@ function SDSimulation(props) {
           marginLeft: "0px",
         }}
       >
-        <g className="plot-dots" />
-        <g className="plot-line" />
-        <g className="x-axis" />
-        <g className="y-axis" />
+        <g className={"plot-dots-" + simId} />
+        <g className={"plot-line-" + simId} />
+        <g className={"x-axis-" + simId} />
+        <g className={"y-axis-" + simId} />
       </svg>
     </div>
   )
-
 }
 
+function drawController(svg, data, id) {
+
+}
 /**
 * Draw a scatter plot of energy vs time using data onto svg
 */
-function drawScatterPlot(svg, data) {
+function drawScatterPlot(svg, data, id) {
   const snapshots = data.snapshots;
   const metadata = data.metadata;
 
@@ -107,10 +116,10 @@ function drawScatterPlot(svg, data) {
     .attr('font-weight', 'bold')
     .text('Energy (unit)');
 
-  svg.select(".x-axis").call(x_axis);
-  svg.select(".y-axis").call(y_axis);
+  svg.select(".x-axis-" + id).call(x_axis);
+  svg.select(".y-axis-" + id).call(y_axis);
 
-  svg.select(".plot-dots")
+  svg.select(".plot-dots-" + id)
     .selectAll(".dot")
     .data(snapshots, d => d.time) // Use time as key since they are unique
     .join("circle")
@@ -121,7 +130,7 @@ function drawScatterPlot(svg, data) {
     .style("fill", "black")
 
   svg
-    .select(".plot-line")
+    .select(".plot-line-" + id)
     .append("path")
     .datum(snapshots)
     .attr("class", "line")
@@ -137,7 +146,7 @@ function drawScatterPlot(svg, data) {
 /**
 * Draw a strand displacement simulation using data onto svg
 */
-function drawSimulation(svg, data) {
+function drawSimulation(svg, data, id) {
   const snapshots = data.snapshots;
   const metadata = data.metadata;
 
@@ -165,7 +174,7 @@ function drawSimulation(svg, data) {
     .width(width)
     .on("end", i => set_state(i))
 
-  svg.select(".slider")
+  svg.select(".slider-" + id)
     .attr("transform", "translate(10, 50)")
     .call(slider);
 
@@ -224,7 +233,7 @@ function drawSimulation(svg, data) {
   function ticked() {
 
     // Base pair links
-    var bp_links = svg.select('.bp_links')
+    var bp_links = svg.select('.bp_links-' + id)
       .selectAll('line')
       .data(filter_links("bp_link"))
     bp_links
@@ -245,7 +254,7 @@ function drawSimulation(svg, data) {
       .remove();
 
     // Backbone links
-    var bb_links = svg.select('.bb_links')
+    var bb_links = svg.select('.bb_links-' + id)
       .selectAll('line')
       .data(filter_links("bb_link"))
 
@@ -266,7 +275,7 @@ function drawSimulation(svg, data) {
       .remove()
 
     // Nodes
-    svg.select('.nodes')
+    svg.select('.nodes-' + id)
       .selectAll('circle')
       .data(nodes)
       .join('circle')
@@ -276,7 +285,7 @@ function drawSimulation(svg, data) {
       .style('fill', d => color(d.strand_id))
 
     // Node texts
-    svg.select('.nodes')
+    svg.select('.nodes-' + id)
       .selectAll('text')
       .data(nodes)
       .join('text')
