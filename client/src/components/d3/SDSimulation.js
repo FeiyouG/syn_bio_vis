@@ -1,6 +1,5 @@
-import React from "react";
 import * as d3 from "d3";
-import { sliderTop } from "d3-simple-slider";
+import { sliderBottom } from "d3-simple-slider";
 import uuid from 'react-uuid'
 
 import { useD3 } from '../../hooks/useD3';
@@ -10,27 +9,38 @@ function SDSimulation(props) {
   // Parse data
   const data = parseData(props.data);
 
-  // An uuid to make each simulation className unique
-  // so that multiple simulation can be rendered on the same page
+  // uuid allows multiple simulation to be rendered on the same page
   const simId = props.id ?? uuid()
 
-  // const simulationRef = useD3((svg) => drawSimulation(svg, data, simId), [data]);
-  // const engeryPlotRef = useD3((svg) => drawEnergyPlot(svg, data, simId), [data]);
-  // const sliderRef = useD3((svg) => drawController(svg, data, simId), [data]);
+  // Some constants to use
+  const naSimConst = {
+    size: { height: 300, width: 1000 },
+  }
+
+  const energyPlotConst = {
+    size: { height: 400, width: 1000 },
+    margin: { top: 0, right: 30, bottom: 0, left: 40 },
+    translate: { x: 0, y: naSimConst.size.height }
+  }
+
+  const sliderCosnt = {
+    size: { height: 50, width: energyPlotConst.size.width },
+    margin: { top: 0, right: energyPlotConst.margin.right, bottom: 0, left: energyPlotConst.margin.left },
+    translate: { x: 0, y: naSimConst.size.height + energyPlotConst.size.height }
+  }
+
+  const svgHeight = naSimConst.size.height + energyPlotConst.size.height + sliderCosnt.size.height
 
   const simulationRef = useD3((svg) => {
-    const { simSize, setSimState } = drawSimulation(svg, data, simId);
-
-    const plotTranslate = {x: 0, y:simSize.height}
-    const { plotSize, setPlotState } = drawEnergyPlot(svg, data, simId, plotTranslate);
+    const setSimState = drawSimulation(svg, data, simId, naSimConst);
+    const setPlotState = drawEnergyPlot(svg, data, simId, energyPlotConst);
 
     const set_state = function(state) {
       setSimState(state)
       setPlotState(state)
     }
 
-    const sliderTranslate = {x:0, y:simSize.height + plotSize.height}
-    drawController(svg, data, simId, sliderTranslate, set_state);
+    drawController(svg, data, simId, sliderCosnt, set_state);
   }, [data])
 
 
@@ -40,7 +50,7 @@ function SDSimulation(props) {
         ref={simulationRef}
         title={"SDSimulation-" + simId}
         style={{
-          height: 1000,
+          height: svgHeight,
           width: "100%",
           marginRight: "0px",
           marginLeft: "0px",
@@ -55,8 +65,9 @@ function SDSimulation(props) {
         <g id={"energyPlot-" + simId}>
           <g className={"plot-dots-" + simId} />
           <g className={"plot-line-" + simId} />
-          <g className={"x-axis-" + simId} />
           <g className={"y-axis-" + simId} />
+          <g className={"x-axis-" + simId} />
+          <g className={"indicator-" + simId} />
         </g >
 
         <g id={"slider-" + simId}>
@@ -67,59 +78,56 @@ function SDSimulation(props) {
   )
 }
 
-function drawController(svg, data, id, translate, callback) {
+function drawController(svg, data, id, constants, callback) {
   const metadata = data.metadata;
   const snapshots = data.snapshots;
 
   if (metadata.strands.length == 0) return;
 
   // Constants
-  const sliderSize = {
-    width: 1000
-  }
+  const size = constants.size
+  const margin = constants.margin
+  const translate = constants.translate
 
   // contruct the slider
-  const slider = sliderTop()
+  const slider = sliderBottom()
     .min(0)
     .max(snapshots.length - 1)
     .step(1)
-    // .tickValues()
-    .width(sliderSize.width)
+    .width(size.width - margin.left - margin.right)
+    .height(size.height - margin.top - margin.bottom)
     .on("end", i => callback(i))
 
-  if(translate != null) {
-    svg.select("#slider-" + id)
-      .attr("transform", `translate(${translate.x}, ${translate.y})`)
-  }
+  // Place the slider in the right origin
+  svg.select("#slider-" + id)
+    .attr("transform", `translate(${translate.x + margin.left}, ${translate.y + margin.top})`)
+
   svg.select(".slider-" + id)
-    .attr("transform", "translate(10, 50)")
     .call(slider);
 }
 /**
 * Draw a scatter plot of energy vs time using data onto svg
 */
-function drawEnergyPlot(svg, data, id, translate) {
-  // Constants
+function drawEnergyPlot(svg, data, id, constants) {
   const snapshots = data.snapshots;
   const metadata = data.metadata;
 
-  const size = { height: 300, width: 1000 }
+  if (metadata.strands.length == 0) return;
 
-  if (metadata.strands.length == 0) {
-    return {
-      plotSize: size,
-      setPlotState: function() { }
-    }
-  }
+  // Constants
+  const size = constants.size
+  const margin = constants.margin
+  const translate = constants.translate ?? { x: 0, y: 0 }
 
-  const margin = { top: 20, right: 30, bottom: 30, left: 40 };
   const stroke_width = 1;
   const axis_text_size = 10;
+  const dots_radius = 5
+  const inidcator_radius = 10
 
   const x_scale = d3
     .scaleLinear()
-    .domain([0, d3.max(snapshots, d => d.time)]).nice()
-    .rangeRound([margin.left + stroke_width, size.width - margin.right])
+    .domain([0, snapshots.length])
+    .rangeRound([margin.left, size.width - margin.right])
 
   const y_scale = d3
     .scaleLinear()
@@ -128,18 +136,18 @@ function drawEnergyPlot(svg, data, id, translate) {
 
   const x_axis = (g) => g
     .attr("transform", `translate(0, ${size.height - margin.bottom})`)
-    .call(d3.axisBottom(x_scale))
+    // .call(d3.axisBottom(x_scale))
     .append('text')
     .attr('text-anchor', 'end')
     .attr('fill', 'black')
     .attr('font-size', axis_text_size)
     .attr('font-weight', 'bold')
     .attr('x', size.width - margin.right)
-    .attr('y', - margin.bottom / 4)
+    .attr('y', - axis_text_size)
     .text('Time (ms)');
 
   const y_axis = (g) => g
-    .attr("transform", `translate(${margin.left},0)`)
+    .attr("transform", `translate(${margin.left}, 0)`)
     .style("color", "steelblue")
     .call(d3.axisLeft(y_scale))
     .append('text')
@@ -150,10 +158,9 @@ function drawEnergyPlot(svg, data, id, translate) {
     .attr('font-weight', 'bold')
     .text('Energy (unit)');
 
-  if(translate != null) {
-    svg.select("#energyPlot-" + id)
-      .attr("transform", `translate(${translate.x}, ${translate.y})`)
-  }
+  // Place the plot in the right origin
+  svg.select("#energyPlot-" + id)
+    .attr("transform", `translate(${translate.x}, ${translate.y})`)
 
   svg.select(".x-axis-" + id).call(x_axis);
   svg.select(".y-axis-" + id).call(y_axis);
@@ -163,9 +170,9 @@ function drawEnergyPlot(svg, data, id, translate) {
     .data(snapshots, d => d.time) // Use time as key since they are unique
     .join("circle")
     .attr("class", "dot")
-    .attr("cx", d => x_scale(d.time))
+    .attr("cx", (_, i) => x_scale(i))
     .attr("cy", d => y_scale(d.energy))
-    .attr("r", 5)
+    .attr("r", dots_radius)
     .style("fill", "black")
 
   svg
@@ -174,36 +181,46 @@ function drawEnergyPlot(svg, data, id, translate) {
     .datum(snapshots)
     .attr("class", "line")
     .attr("d", d3.line()
-      .x(d => x_scale(d.time))
+      .x((_, i) => x_scale(i))
       .y(d => y_scale(d.energy))
       .curve(d3.curveMonotoneX))
     .style("fill", "none")
     .style("stroke", "black")
     .style("stroke-width", 2)
 
-  return {
-    plotSize: size,
-    setPlotState: function() { }
-  }
+  svg
+    .select(".indicator-" + id)
+    .selectAll(".circle")
+    // .data(snapshots, d => d.time) // Use time as key since they are unique
+    .data([0])
+    .join("circle")
+    .attr("class", "circle")
+    // .attr("cx", d => x_scale(d.time))
+    // .attr("cy", d => y_scale(d.energy))
+    .attr("cx", x_scale(0))
+    .attr("cy", y_scale(snapshots[0].energy))
+    .attr("r", inidcator_radius)
+    .style("fill", "red")
 
+  return function(i) {
+    svg.select(".indicator-" + id)
+      .selectAll(".circle")
+      .attr("cx", x_scale(i))
+      .attr("cy", y_scale(snapshots[i].energy))
+  }
 }
 
 /**
 * Draw a strand displacement simulation using data onto svg
 */
-function drawSimulation(svg, data, id) {
-
-  // Constants
+function drawSimulation(svg, data, id, constants) {
   const metadata = data.metadata;
   const snapshots = data.snapshots;
-  const size = { height: 300, width: 1000 }
 
-  if (metadata.strands.length == 0) {
-    return {
-      simSize: size,
-      setSimState: function() { }
-    }
-  }
+  if (metadata.strands.length == 0) return;
+
+  // Constants
+  const size = constants.size
 
   const na_radius = 12
   const na_fontSize = 15
@@ -316,6 +333,7 @@ function drawSimulation(svg, data, id) {
       .remove()
 
     // Nodes
+    // Prevent nodes fly outside of the screen
     svg.select('.nodes-' + id)
       .selectAll('circle')
       .data(nodes)
@@ -340,17 +358,11 @@ function drawSimulation(svg, data, id) {
   }
 
   // Call back by slider when a new state is set
-  function setState(i) {
+  return function(i) {
     links = get_links(i)
     simulation.force("link").links(links)
     simulation.alpha(0.05).restart()
   }
-
-  return {
-    simSize: size,
-    setSimState: setState
-  }
-
 
 }
 
@@ -405,7 +417,6 @@ function parseData(data) {
     res.snapshots.push(snapshot);
   }
 
-  console.log(res)
   return res;
 }
 
