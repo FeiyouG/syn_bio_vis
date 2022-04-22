@@ -126,7 +126,7 @@ function drawEnergyPlot(svg, data, id, constants) {
 
   const x_scale = d3
     .scaleLinear()
-    .domain([0, snapshots.length])
+    .domain([0, snapshots.length-1])
     .rangeRound([margin.left, size.width - margin.right])
 
   const y_scale = d3
