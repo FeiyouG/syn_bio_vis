@@ -27,10 +27,6 @@ Then, clone this project:
 ```shell
 $ git clone https://github.com/gfeiyou/syn_bio_vis.git
 ```
-
-### Set up environment variables
- following environment variables needs to be set
-
 ### Set up Server
 Inside the folder `syn_bio_vis/server/`, run `npm install` to install all
 the dependencies for the server.
