@@ -5,9 +5,26 @@
 
 import { run_python } from "../utils/python.js";
 
+
+// MARK: CONSTANTS
+const SDSIMULATION_PY = "simulation/SDSimulation.py"
+
 // --------------------
 // MARK: GET REQUESTs
 // --------------------
+// Run a simulation and return the result to client
+export const getSim = async (req, res) => {
+  try {
+    const simName = req.params.simName
+    console.log("Request to get simulation/" + simName);
+
+    res.status(200)
+    res.sendFile(simName + ".json", { root: './src/simulation' })
+  } catch (error) {
+    // TODO: correctly handle error
+    res.status(404).json({ message: error.message });
+  }
+}
 
 
 // --------------------
@@ -20,10 +37,12 @@ export const runSim = async (req, res) => {
     console.log("Request to start a simulation with input:");
     console.log(req.body);
 
-    // TODO: Run the simulation here
-    // result = runPython({filename: "hello.py", toehold: "", bm: ""});
-    // runPython({filename: "utils/sim_strand_displacement.py", toehold: "", bm: ""});
-    run_python("utils/sim_strand_displacement.py", "TCTA", "TCGACT", (error, stdout, stderr) => {
+    // Run simulation
+    const args = {
+      toehold: "TCTA",
+      bm: "TCGACT"
+    }
+    run_python(SDSIMULATION_PY, args, (error, stdout, stderr) => {
       if (error) {
         console.log(`error: ${error.message}`);
         return;
@@ -45,16 +64,3 @@ export const runSim = async (req, res) => {
   }
 }
 
-// Run a simulation and return the result to client
-export const getSim = async (req, res) => {
-  try {
-    const simName = req.params.simName
-    console.log("Request to get simulation/" + simName);
-
-    res.status(200)
-    res.sendFile(simName + ".json", { root: './src/simulation' })
-  } catch (error) {
-    // TODO: correctly handle error
-    res.status(404).json({ message: error.message });
-  }
-}

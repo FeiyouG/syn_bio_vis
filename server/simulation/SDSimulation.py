@@ -34,11 +34,12 @@ def create_options(toehold_seq, bm_seq):
   option.dangles = 1
   option.output_interval = 100   # record every 100 steps (so we'll get around 100 record entries)
   option.start_state = [start_complex]
-  option.rate_scaling="Calibrated"
+  # option.rate_scaling="Calibrated"
+  option.JSKawasaki37()
   option.join_concentration=1e-6  # 1 uM
   option.verbosity=0  # doesn't turn off output during simulation -- but it should.  please wait for multistrand 3.0.
 
-  strands = [base.sequence, incument.sequence, input.sequence]
+  strands = [base.sequence, input.sequence, incument.sequence]
   return option, strands
 
 def get_trajectory(option, strands):
@@ -48,6 +49,7 @@ def get_trajectory(option, strands):
   # The strands in this reaction, mainly for sorting purposes
   strand_order = []
 
+  # TODO: the order is still. We need to make sure the order is the same as it is in strands
   # Used to sort trajectory since strand order can change upon association of dissociation
   # key = i in strand_order, value = new_strand_order.index[strand_order[i]]
   strand_map = {}
