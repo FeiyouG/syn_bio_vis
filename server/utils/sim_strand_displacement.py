@@ -38,7 +38,7 @@ def create_options(toehold_seq, bm_seq):
   option.join_concentration=1e-6  # 1 uM
   option.verbosity=0  # doesn't turn off output during simulation -- but it should.  please wait for multistrand 3.0.
 
-  strands = [base, incument, input]
+  strands = [base.sequence, incument.sequence, input.sequence]
   return option, strands
 
 def get_trajectory(option, strands):
