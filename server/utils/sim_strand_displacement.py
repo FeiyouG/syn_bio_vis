@@ -3,6 +3,13 @@ import json
 from multistrand.objects import *
 from multistrand.options import Options, Literals
 from multistrand.system import SimSystem, energy
+import argparse
+
+parser = argparse.ArgumentParser()
+parser.add_argument('toehold', type=str, default="TCTA")
+parser.add_argument('bm', type=str, default="TCGACT")
+
+args = parser.parse_args()
 
 def create_options(toehold_seq, bm_seq):
   # Domains
@@ -123,3 +130,19 @@ def simulate(toehold_seq, bm_seq):
 #
 #    json = json.dumps(trajectory, indent=4)
 #    save_json(json)
+
+if __name__ == '__main__':
+    # toehold_seq = "TCTA"
+    # bm_seq = "TCGACT"
+    toehold_seq = args.toehold
+    bm_seq = args.bm
+    trajectory = simulate(toehold_seq, bm_seq)
+    # option = create_options(toehold_seq, bm_seq)
+    # system = SimSystem(option)
+    # system.start()
+    # trajectory = get_trajectory(option)
+
+    json = json.dumps(trajectory, indent=4)
+    print(json)
+    # print(trajectory)
+
