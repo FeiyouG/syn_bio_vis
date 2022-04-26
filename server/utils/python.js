@@ -30,21 +30,6 @@
 
 import { exec } from "child_process";
 
-export const run_python = function(filename, toehold, bm, res) {
-  exec("python " + filename + " " + toehold + " " + bm, res);
-
-
-  //   (error, stdout, stderr) => {
-    // if (error) {
-    //   console.log(`error: ${error.message}`);
-    //   return;
-    // }
-    // if (stderr) {
-    //   console.log(`stderr: ${stderr}`);
-    //   return;
-    // }
-  //   // console.log(JSON.parse(stdout))
-  //   return stdout;
-  //   // console.log(`stdout: ${stdout}`);
-  // });
+export const run_python = function(filename, args, res) {
+    exec(`python ${filename} ${args.toehold} ${args.bm}`, res);
 }

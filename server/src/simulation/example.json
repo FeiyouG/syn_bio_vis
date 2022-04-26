@@ -1,14 +1,8 @@
 {
   "strands": [
-    {
-      "sequence": "AGATAGCTGA"
-    },
-    {
-      "sequence": "TCTATCGACT"
-    },
-    {
-      "sequence": "AGCTGA"
-    }
+    "AGATAGCTGA",
+    "TCTATCGACT",
+    "AGCTGA"
   ],
   "conformation": [
     "......((((+))))((((((+))))))",
