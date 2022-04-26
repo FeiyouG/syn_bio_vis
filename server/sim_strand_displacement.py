@@ -18,6 +18,9 @@ def create_options(toehold_seq, bm_seq):
   #bm stands for branch migration
 
   # Strands
+  # .C - complement
+  # base - toehold + bm
+  # incumbent - just bm
   base = Strand(name="incument", domains=[toehold_domain + bm_domain])
   incument = Strand(name="incument", domains=[bm_domain.C])
   input = Strand(name="incument", domains=[base.C])

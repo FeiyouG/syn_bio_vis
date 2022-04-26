@@ -41,13 +41,12 @@ export const runSim = async (req, res) => {
         args: [req.toehold, req.bm] //An argument which can be accessed in the script using sys.argv[1]
       };
   
-      PythonShell.run('sim_strand_displacement.py', options, function (err, result){
+      PythonShell.run('hello.py', options, function (err, result){
         if (err) throw err;
         // result is an array consisting of messages collected
         //during execution of script.
         console.log('result: ', result.toString());
         res.status(200).json({ res_msg: result.toString() })
-        res.send(result.toString())
       });  
     } catch (error) {
       res.status(404).json({ message: error.message });
