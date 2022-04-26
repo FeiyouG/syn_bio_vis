@@ -21,9 +21,10 @@ export const runSim = async (req, res) => {
     console.log(req.body);
 
     // TODO: Run the simulation here
-    result = runPython({filename: "hello.py", toehold: "", bm: ""});
+    // result = runPython({filename: "hello.py", toehold: "", bm: ""});
+    runPython({filename: "utils/hello.py", toehold: "", bm: ""});
     res.status(200);
-    console.log(result);
+    // console.log(result);
     res.sendFile('example.json', {root: './src/simulation'})
   } catch (error) {
     // TODO: correctly handle error

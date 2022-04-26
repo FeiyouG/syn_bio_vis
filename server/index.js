@@ -25,6 +25,6 @@ app.use('/tutor', tutorRoutes);
 
 // Start the server
 // TODO: Change PORT for production code
-const PORT = process.env.SERVER_PORT || 3000;
+const PORT = process.env.SERVER_PORT || 3001;
 // const HOSTNAME = "0.0.0.0";
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
