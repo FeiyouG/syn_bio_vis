@@ -3,6 +3,8 @@
 // NOTE: HTTP Status Code Lookup:
 // https://www.restapitutorial.com/httpstatuscodes.html
 
+import { runPython } from "../utils/python.js";
+
 // --------------------
 // MARK: GET REQUESTs
 // --------------------
@@ -15,11 +17,13 @@
 // Run a simulation and return the result to client
 export const runSim = async (req, res) => {
   try {
-    console.log("Request to tart a simulation with input:");
+    console.log("Request to start a simulation with input:");
     console.log(req.body);
 
     // TODO: Run the simulation here
+    result = runPython({filename: "hello.py", toehold: "", bm: ""});
     res.status(200);
+    console.log(result);
     res.sendFile('example.json', {root: './src/simulation'})
   } catch (error) {
     // TODO: correctly handle error

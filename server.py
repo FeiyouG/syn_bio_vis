@@ -1,5 +1,5 @@
 from flask import Flask
-from simulation import sim_strand_displacement
+from server.utils import sim_strand_displacement
 
 app = Flask(__name__)
 
