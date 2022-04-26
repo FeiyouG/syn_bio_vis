@@ -403,8 +403,9 @@ function drawSimulation(svg, data, id, constants) {
 function parseData(data) {
   var res = {};
   res.metadata = {
-    strands: data.strands.map(d => d.sequence)
+    strands: data.strands
   }
+
   res.snapshots = [];
 
   for (var i = 0; i < data.conformation.length; i++) {
@@ -468,7 +469,7 @@ function parseDotParen(dotParen, strands) {
       // The dot-paren conformation for every the other strand is reversed.
       na_state.na_id = i % 2 == 0 ? j : conformation.length - j - 1;
       na_state.strand_id = i;
-      na_state.na_name = strands[i].sequence[na_state.na_id];
+      na_state.na_name = strands[i][na_state.na_id];
       na_state.id = id + na_state.na_id;
 
       if (na_state.na_id < conformation.length - 1) {
