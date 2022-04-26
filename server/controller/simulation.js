@@ -3,7 +3,7 @@
 // NOTE: HTTP Status Code Lookup:
 // https://www.restapitutorial.com/httpstatuscodes.html
 
-import { runPython } from "../utils/python.js";
+import { run_python } from "../utils/python.js";
 
 // --------------------
 // MARK: GET REQUESTs
@@ -22,10 +22,22 @@ export const runSim = async (req, res) => {
 
     // TODO: Run the simulation here
     // result = runPython({filename: "hello.py", toehold: "", bm: ""});
-    runPython({filename: "utils/hello.py", toehold: "", bm: ""});
+    // runPython({filename: "utils/sim_strand_displacement.py", toehold: "", bm: ""});
+    run_python("utils/sim_strand_displacement.py", "TCTA", "TCGACT", (error, stdout, stderr) => {
+      if (error) {
+        console.log(`error: ${error.message}`);
+        return;
+      }
+      if (stderr) {
+        console.log(`stderr: ${stderr}`);
+        return;
+      }
+      // console.log(stdout)
+      res.send(stdout)
+    })
     res.status(200);
     // console.log(result);
-    res.sendFile('example.json', {root: './src/simulation'})
+    // res.sendFile('example.json', { root: './src/simulation' })
   } catch (error) {
     // TODO: correctly handle error
     console.log(error)
@@ -40,7 +52,7 @@ export const getSim = async (req, res) => {
     console.log("Request to get simulation/" + simName);
 
     res.status(200)
-    res.sendFile(simName + ".json", {root: './src/simulation'})
+    res.sendFile(simName + ".json", { root: './src/simulation' })
   } catch (error) {
     // TODO: correctly handle error
     res.status(404).json({ message: error.message });
