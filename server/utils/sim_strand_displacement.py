@@ -38,11 +38,12 @@ def create_options(toehold_seq, bm_seq):
   option.join_concentration=1e-6  # 1 uM
   option.verbosity=0  # doesn't turn off output during simulation -- but it should.  please wait for multistrand 3.0.
 
-  return option
+  strands = [base, incument, input]
+  return option, strands
 
-def get_trajectory(option):
+def get_trajectory(option, strands):
   # The trajectory of the SD, strands sorted in the order appear in strand_order
-  trajectory = {"Conformation":[], "Time":[], "Energy":[]}
+  trajectory = {"strands": strands, "conformation":[], "time":[], "energy":[]}
 
   # The strands in this reaction, mainly for sorting purposes
   strand_order = []
@@ -74,7 +75,7 @@ def get_trajectory(option):
       new_strand_order += strands.split("+")
       structs += struct.split("+")
       sign += " "
-      dG += energy;
+      dG += energy
 
     # 2. UPDATE STRAND_MAP
 
@@ -87,7 +88,7 @@ def get_trajectory(option):
     ## Update strand_map when strand order changes upon association of dissociation
     if(new_strand_order != strand_order):
       for j in range(len(new_strand_order)):
-        strand_map[j] = new_strand_order.index(strand_order[j]);
+        strand_map[j] = new_strand_order.index(strand_order[j])
 
     # 3. GET SECONDARY STRUCT in proper order
     new_trajectory = ""
@@ -96,9 +97,9 @@ def get_trajectory(option):
       new_trajectory += sign[strand_map[i]]
 
     # 4. UPDATE TRAJECTORY
-    trajectory["Conformation"].append(new_trajectory.strip())
-    trajectory["Time"].append(time)
-    trajectory["Energy"].append(dG)
+    trajectory["conformation"].append(new_trajectory.strip())
+    trajectory["time"].append(time)
+    trajectory["energy"].append(dG)
 
   return trajectory
 
@@ -109,11 +110,11 @@ def save_json(json, file_name="sim_strand_displacement.json"):
 
 
 def simulate(toehold_seq, bm_seq):
-  option = create_options(toehold_seq, bm_seq)
+  option, strands = create_options(toehold_seq, bm_seq)
   system = SimSystem(option)
   system.start()
 
-  trajectory = get_trajectory(option)
+  trajectory = get_trajectory(option, strands)
 
   return trajectory
   #  save_json(json)
