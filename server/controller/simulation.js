@@ -7,7 +7,7 @@ import { run_python } from "../utils/python.js";
 
 
 // MARK: CONSTANTS
-const SDSIMULATION_PY = "simulation/SDSimulation.py"
+const SDSIMULATION_PY = "simulation/SDSimulation_domain.py"
 
 // --------------------
 // MARK: GET REQUESTs
@@ -38,13 +38,14 @@ export const runSim = async (req, res) => {
     console.log(req.body);
 
     // Run simulation
-    const args = {
-      toehold: "TCTA",
-      bm: "TCGACT"
-    }
-    run_python(SDSIMULATION_PY, args, (error, stdout, stderr) => {
+    const argv = [
+      SDSIMULATION_PY,                          // filename
+      "TCTA TCGACT"
+    ]
+    run_python(argv, (error, stdout, stderr) => {
       if (error) {
         console.log(`error: ${error.message}`);
+        console.log(stdout)
         return;
       }
       if (stderr) {
@@ -54,6 +55,23 @@ export const runSim = async (req, res) => {
       // console.log(stdout)
       res.send(stdout)
     })
+    // const args = {
+    //   toehold: "TCTA",
+    //   bm: "TCGACT"
+    // }
+    // run_python(SDSIMULATION_PY, args, (error, stdout, stderr) => {
+    //   if (error) {
+    //     console.log(`error: ${error.message}`);
+    //     return;
+    //   }
+    //   if (stderr) {
+    //     console.log(`stderr: ${stderr}`);
+    //     return;
+    //   }
+    //   // console.log(stdout)
+    //   res.send(stdout)
+    // })
+
     res.status(200);
     // console.log(result);
     // res.sendFile('example.json', { root: './src/simulation' })
