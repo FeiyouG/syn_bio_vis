@@ -30,6 +30,14 @@
 
 import { exec } from "child_process";
 
-export const run_python = function(filename, args, res) {
-    exec(`python ${filename} ${args.toehold} ${args.bm}`, res);
+export const run_python = function(argv, res) {
+  var argv_str = ""
+
+  for (var i = 0; i < argv.length; i++) {
+    argv_str += `${argv[i]} `;
+  }
+
+  console.log(argv_str)
+
+  exec(`python ${argv_str}`, res);
 }
