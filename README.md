@@ -92,5 +92,5 @@ redirect to another port.
 
 
 ## Contribute to this project
-Please refer to [CONTRIBUTING.md]()
+Please refer to [CONTRIBUTING.md](https://github.com/FeiyouG/syn_bio_vis/blob/main/CONTRIBUTING.md)
 if you want to contribute to this project.
