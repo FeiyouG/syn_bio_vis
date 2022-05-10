@@ -10,14 +10,16 @@ function SDSimulation(props) {
   const scatterPlotRef = useD3((svg) => drawScatterPlot(svg, data), [data]);
   // const simulationRef = useD3((svg) => test(svg, data), [data]);
 
-
-  if (data.metadata.strands.length == 0) {
+  if (data.message != null) {
     return (
-      <div>
-        <h1>NO DATA</h1>
+      <div id="SDSimulation">
+        <center>
+          <h3>{data.message}</h3>
+        </center>
       </div>
     )
   }
+
 
   return (
     <div id="SDSimulation">
@@ -61,10 +63,10 @@ function SDSimulation(props) {
 * Draw a scatter plot of energy vs time using data onto svg
 */
 function drawScatterPlot(svg, data) {
+  if (data.message != undefined) return data
+
   const snapshots = data.snapshots;
   const metadata = data.metadata;
-
-  if (metadata.strands.length == 0) return;
 
   // Constants
   const height = 500;
@@ -138,10 +140,10 @@ function drawScatterPlot(svg, data) {
 * Draw a strand displacement simulation using data onto svg
 */
 function drawSimulation(svg, data) {
+  if (data.message != undefined) return data
+
   const snapshots = data.snapshots;
   const metadata = data.metadata;
-
-  if (metadata.strands.length == 0) return;
 
   // Constants
   const height = 500;
@@ -326,9 +328,11 @@ function drawSimulation(svg, data) {
 *                       }
 */
 function parseData(data) {
+  if (data.message != undefined) return data
+
   var res = {};
   res.metadata = {
-    strands: data.strands.map(d => d.sequence)
+    strands: data.strands
   }
   res.snapshots = [];
 
@@ -394,7 +398,8 @@ function parseDotParen(dotParen, strands) {
       // The dot-paren conformation for every the other strand is reversed.
       na_state.na_id = i % 2 == 0 ? j : conformation.length - j - 1;
       na_state.strand_id = i;
-      na_state.na_name = strands[i].sequence[na_state.na_id];
+      // console.log(i, na_state.na_id, strands.length)
+      na_state.na_name = strands[i][na_state.na_id];
       na_state.id = id + na_state.na_id;
 
       if (na_state.na_id < conformation.length - 1) {
