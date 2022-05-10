@@ -11,7 +11,7 @@ function Tutorial() {
   // Strand data input by the user
   const [tutorial, setTutorial] = useState("# This is Lesson page");
   const [simData, setSimData] = useState({
-    strands: [], conformation: [], energy: [], time: []
+    message: "Waiting for server ..."
   });
   const dispatch = useDispatch();
 

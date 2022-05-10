@@ -1,5 +1,7 @@
+import { useState } from "react"
 import * as d3 from "d3";
 import { sliderBottom } from "d3-simple-slider";
+import Switch from "react-switch"
 import uuid from 'react-uuid'
 
 import { useD3 } from '../../hooks/useD3';
@@ -35,13 +37,18 @@ function SDSimulation(props) {
     const setSimState = drawSimulation(svg, data, simId, naSimConst);
     const setPlotState = drawEnergyPlot(svg, data, simId, energyPlotConst);
 
-    const set_state = function(state) {
+    const setState = function(state) {
       setSimState(state)
       setPlotState(state)
     }
 
-    drawController(svg, data, simId, sliderCosnt, set_state);
+    drawController(svg, data, simId, sliderCosnt, setState);
   }, [data])
+
+  const [educationMode, setEducationMode] = useState(false)
+  const toggleEducationMode = function() {
+    setEducationMode(!educationMode)
+  }
 
 
   if (data.message != null) {
@@ -85,7 +92,30 @@ function SDSimulation(props) {
           <g className={"slider-" + simId} />
         </g >
       </svg>
-    </div>
+
+      <label style={{
+        display: "flex",
+        flexDirection: "row",
+        alignItems: "center",
+      }}>
+
+        <span style={{
+          marginRight: "5px"
+        }}>
+          Education Mode
+        </span>
+
+        <Switch
+          checked={educationMode}
+          onChange={toggleEducationMode}
+          disabled={true}
+          uncheckedIcon=""
+          checkedIcon=""
+          height={20}
+          width={40}
+        />
+      </label>
+    </div >
   )
 }
 
