@@ -11,9 +11,8 @@ function Simulation() {
 
   const pilFile = useRef(null);
 
-  const [simData, setSimData] = useState({
-    message: "Waiting for simulation data ..."
-  });
+  const initialMessage = { message: "Strand Displacement Simulation" }
+  const [simData, setSimData] = useState(initialMessage);
 
   // Callabck triggered by submit button
   const handleSubmit = (e) => {
@@ -26,6 +25,10 @@ function Simulation() {
       return
     }
 
+    setSimData({
+      message: "Waiting for server ..."
+    })
+
     const data = new FormData()
     data.append('pilFile', fileList[0])
 
@@ -33,8 +36,8 @@ function Simulation() {
   }
 
   // Callback triggered by clear button
-  const handleReset = () => {
-    // setStrandData({ top1: '', top2: '', base: '' })
+  const handleReset = (e) => {
+    console.log("handleReset not yet implemented")
   }
 
   return (
