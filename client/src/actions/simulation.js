@@ -13,15 +13,15 @@ import * as api from '../api';
 // --------------------
 
 // Run a simulation in the server and returns the result as json
-export const runSim = (simData, setSimData) => async (dispatch) => {
+export const runSim = (formData, setSimData) => async (dispatch) => {
   try {
-    // Set request to the server
-    const { data } = await api.runSim(simData);
-    // Draw simulation using the data sent back from server
-    setSimData(data);
+
+    const { status, data } = await api.runSim(formData);
+    if (status )
+    console.log(JSON.parse(data))
+    setSimData(JSON.parse(data));
   } catch (error) {
-    // TODO: Properly hanlde errors
-    console.log(error.message);
+    setSimData({ message: `${error.response.data.message}`})
   }
 }
 

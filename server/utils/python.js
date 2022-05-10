@@ -1,43 +1,52 @@
-// import {PythonShell} from "python-shell"
-// Run a simulation and return the result to client
-// arguments: filename, toehold, bm
-// export const runPython = async (req, res) => {
-//   try {
-//     try {
-//       let options = {
-//         mode: 'text',
-//         pythonOptions: ['-u'], // get print results in real-time
-//         // scriptPath: '/simulation/', //If you are having python_test.py script in same folder, then it's optional.
-//         args: [req.toehold, req.bm], //An argument which can be accessed in the script using sys.argv[1]
-//         pythonPath: "~/venv/bin/python2.7"
-//       };
+// import { exec } from "child_process";
 //
-//       console.log(req.filename)
-//       PythonShell.run(req.filename, options, function(err, result) {
-//         if (err) throw err;
-//         // result is an array consisting of messages collected
-//         //during execution of script.
-//         console.log('result: ', result.toString());
-//       });
-//     } catch (error) {
-//       console.log(error)
-//     }
+// export const run_python = function(argv, res) {
+//   var argv_str = ""
 //
-//   } catch (error) {
-//     console.log(error)
+//   for (var i = 0; i < argv.length; i++) {
+//     // argv_str += `${argv[i]} `.replace(/\n/g, "\\n").replace(\(, "\(");
+//     argv_str += `${argv[i]} `;
 //   }
+//
+//   console.log(argv_str)
+//
+//   exec(`python ${argv_str}`, res);
 // }
 
-import { exec } from "child_process";
 
-export const run_python = function(argv, res) {
-  var argv_str = ""
+import { spawn } from 'child_process'
 
-  for (var i = 0; i < argv.length; i++) {
-    argv_str += `${argv[i]} `;
-  }
+/**
+* @param  path      the path to the python scripts
+* @param  args      list of arguments for the python scripts
+* @param  callback  function invoked when child process exits;
+*                   first parameter is a status code,
+*                   second parameter is a data or error message
+*/
+export const runPython = function(path, args, callback) {
 
-  console.log(argv_str)
+  var stdout = ""
+  var stderr = ""
 
-  exec(`python ${argv_str}`, res);
+  args.unshift(path)
+  const child = spawn("python", args)
+
+  child.stdout.on('data', (data) => stdout += data)
+  child.stderr.on('data', (data) => stderr += data)
+  child.on('error', (error) => {
+    // console.error(`Simulation failed to start:\n${error}}`)
+    error(500, "Internal Server Error")
+  })
+
+  child.on('exit', (code, signal) => {
+    // console.log(stderr)
+    if (code == 0) {
+      // console.log(`Simulation successfully`)
+      callback(200, stdout)
+    } else {
+      // console.error(`subprocess finished simulation with code ${code} and signal ${signal} with error:\n${error}`);
+      callback(400, { message: "Bad syntax in *.pil file" })
+    }
+  })
+
 }
