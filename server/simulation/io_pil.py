@@ -5,10 +5,6 @@ import re, sys
 from multistrand.objects import *
 import argparse
 
-parser = argparse.ArgumentParser()
-parser.add_argument('file', type=str)
-args = parser.parse_args()
-
 
 ## GLOBALS
 # Helpful regular expressions
@@ -31,14 +27,13 @@ d_paren = r"[().+]+"
 num     = r"\d+"
 
 # Reae from *.pil files and return lists of Mutlistrand objects
-def from_PIL(filename):
-  pil_file = open(filename)
+def from_PIL(pilFile):
   domains = {}
   strands = {}
   complexes = []
 
-    # TODO: Error handling isn't robust
-  for line in pil_file:
+  # TODO: Error handling isn't robust
+  for line in pilFile:
     line = strip_comment(line).strip()
     if line == "": continue
 
@@ -47,11 +42,6 @@ def from_PIL(filename):
     # If sequence declaration
     if type == "sequence":
       d = parseSequence(line)
-      domains[d.name] = d
-      c = d.C # d.C is an instance of ComplementDomain instead of Domain
-      domains[c.name] = Domain(name = c.name, sequence = c.sequence, length = c.length)
-    elif type == "sup-sequence":
-      d = parseSupSequence(line, domains)
       domains[d.name] = d
       c = d.C # d.C is an instance of ComplementDomain instead of Domain
       domains[c.name] = Domain(name = c.name, sequence = c.sequence, length = c.length)
@@ -64,9 +54,7 @@ def from_PIL(filename):
       complexes.append(parseStruct(line, strands))
     else:
       # Unknown type on this line; print error message and continue
-      print >> sys.stderr, "Warning: Bad syntax on this line:\n%s\nContinuing anyway.\n" % l
-
-  pil_file.close()
+      print >> sys.stderr, "Warning: Bad syntax on this line:\n%s\nContinuing anyway.\n" % line
 
   return domains.values(), strands.values(), complexes
 
@@ -85,23 +73,6 @@ def parseSequence(line):
     return domain
   else:
     print >> sys.stderr, "Invalid sequence directive:\n%s" % line
-
-
-def parseSupSequence(line, domains):
-  # Syntax:
-  #   sup-sequence <name> = <seq1> [<seq2> [<seq3> ...]] : <seq_length>
-  regex = re.compile("sup-sequence" + space + "(" + word + ")" + space + "=" +
-    space + "(" + words_s + ")" + ":" + space + num)
-  match_obj = regex.match(line)
-  if match_obj != None:
-    name = match_obj.group(1)
-    domain_list = [domains[n] for n in match_obj.group(2).split()]
-
-    # Create/add the new SuperSequence and its complement
-    domain = Domain(name = name, subdomains = domain_list)
-    return domain
-  else:
-    print >> sys.stderr, "Invalid sup-sequence directive:\n%s" % line
 
 
 def parseStrand(line, domains):
@@ -143,10 +114,5 @@ def strip_comment(line):
   try:
     return line[:line.index("#")]
   except ValueError:
-    return line
-
-
-if __name__ == "__main__":
-  filename = args.file
-  print(from_PIL(filename))
+   return line
 

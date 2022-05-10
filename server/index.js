@@ -1,5 +1,7 @@
 import express from 'express';
 import bodyParser from 'body-parser';
+import fileUpload from 'express-fileupload'
+// import multer from 'multer';
 import cors from 'cors';
 
 import simRoutes from './routes/simRoutes.js';
@@ -7,13 +9,14 @@ import tutorRoutes from './routes/tutorRoutes.js';
 
 const app = express();
 
-app.use(bodyParser.json({ limit: "30mb", extended: true }));
-app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
+app.use(bodyParser.json({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(fileUpload())
 
-const corsOptions ={
-    origin: process.env.CLIENT_ORIGIN || 'http://localhost:3000',
-    credentials:true,            //access-control-allow-credentials:true
-    optionSuccessStatus:200
+const corsOptions = {
+  origin: process.env.CLIENT_ORIGIN || 'http://localhost:3000',
+  credentials: true,            //access-control-allow-credentials:true
+  optionSuccessStatus: 200
 }
 
 app.use(cors(corsOptions));

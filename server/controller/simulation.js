@@ -1,13 +1,12 @@
 // This module contains functions triggered by
 // simulation related post and get requests
-// NOTE: HTTP Status Code Lookup:
-// https://www.restapitutorial.com/httpstatuscodes.html
 
-import { run_python } from "../utils/python.js";
+import { runPython } from "../utils/python.js";
 
 
 // MARK: CONSTANTS
-const SDSIMULATION_PY = "simulation/SDSimulation_domain.py"
+const SDSIMULATION_PY = "simulation/SDSimulation.py"
+// const SDSIMULATION_PY = "simulation/SDSimulation_domain.py"
 
 // --------------------
 // MARK: GET REQUESTs
@@ -35,46 +34,14 @@ export const getSim = async (req, res) => {
 export const runSim = async (req, res) => {
   try {
     console.log("Request to start a simulation with input:");
-    console.log(req.body);
 
-    // Run simulation
-    const argv = [
-      SDSIMULATION_PY,                          // filename
-      "TCTA TCGACT"
-    ]
-    run_python(argv, (error, stdout, stderr) => {
-      if (error) {
-        console.log(`error: ${error.message}`);
-        console.log(stdout)
-        return;
-      }
-      if (stderr) {
-        console.log(`stderr: ${stderr}`);
-        return;
-      }
-      // console.log(stdout)
-      res.send(stdout)
+    const args = `${req.files.pilFile.data}`.split("\n")
+    console.log(args)
+
+    runPython(SDSIMULATION_PY, args, (status, data) => {
+      res.status(status).json(data).end()
     })
-    // const args = {
-    //   toehold: "TCTA",
-    //   bm: "TCGACT"
-    // }
-    // run_python(SDSIMULATION_PY, args, (error, stdout, stderr) => {
-    //   if (error) {
-    //     console.log(`error: ${error.message}`);
-    //     return;
-    //   }
-    //   if (stderr) {
-    //     console.log(`stderr: ${stderr}`);
-    //     return;
-    //   }
-    //   // console.log(stdout)
-    //   res.send(stdout)
-    // })
 
-    res.status(200);
-    // console.log(result);
-    // res.sendFile('example.json', { root: './src/simulation' })
   } catch (error) {
     // TODO: correctly handle error
     console.log(error)

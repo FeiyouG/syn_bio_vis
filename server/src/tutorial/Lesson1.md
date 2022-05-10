@@ -78,7 +78,6 @@ by a collection of DNA strands
 to reliably release a specific output,
 a. k. a. DNA computation!
 
-<!-- `.pil format` -->
 ```SDSimulation
 {
   "name": "example"
