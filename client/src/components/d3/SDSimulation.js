@@ -44,6 +44,17 @@ function SDSimulation(props) {
   }, [data])
 
 
+  if (data.message != null) {
+    return (
+      <div id="SDSimulation">
+        <center>
+          <h3>{data.message}</h3>
+        </center>
+      </div>
+    )
+  }
+
+
   return (
     <div id={"SDSimulation-" + simId}>
       <svg
@@ -79,10 +90,10 @@ function SDSimulation(props) {
 }
 
 function drawController(svg, data, id, constants, callback) {
+  if (data.message != null) return
+
   const metadata = data.metadata;
   const snapshots = data.snapshots;
-
-  if (metadata.strands.length == 0) return;
 
   // Constants
   const size = constants.size
@@ -109,10 +120,10 @@ function drawController(svg, data, id, constants, callback) {
 * Draw a scatter plot of energy vs time using data onto svg
 */
 function drawEnergyPlot(svg, data, id, constants) {
+  if (data.message != null) return
+
   const snapshots = data.snapshots;
   const metadata = data.metadata;
-
-  if (metadata.strands.length == 0) return;
 
   // Constants
   const size = constants.size
@@ -126,7 +137,7 @@ function drawEnergyPlot(svg, data, id, constants) {
 
   const x_scale = d3
     .scaleLinear()
-    .domain([0, snapshots.length-1])
+    .domain([0, snapshots.length - 1])
     .rangeRound([margin.left, size.width - margin.right])
 
   const y_scale = d3
@@ -214,10 +225,10 @@ function drawEnergyPlot(svg, data, id, constants) {
 * Draw a strand displacement simulation using data onto svg
 */
 function drawSimulation(svg, data, id, constants) {
+  if (data.message != null) return
+
   const metadata = data.metadata;
   const snapshots = data.snapshots;
-
-  if (metadata.strands.length == 0) return;
 
   // Constants
   const size = constants.size
@@ -401,6 +412,8 @@ function drawSimulation(svg, data, id, constants) {
 *                       }
 */
 function parseData(data) {
+  if (data.message != null) return data
+
   var res = {};
   res.metadata = {
     strands: data.strands
