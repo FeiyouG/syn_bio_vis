@@ -7,16 +7,14 @@ import { getSim } from '../../actions/simulation';
 import SDSimulation from '../d3/SDSimulation'
 
 function Tutorial() {
-  // Hooks
-  // Strand data input by the user
+  // MARK: hooks
   const [tutorial, setTutorial] = useState("# This is Lesson page");
   const [simData, setSimData] = useState({
     message: "Waiting for server ..."
   });
   const dispatch = useDispatch();
 
-  // Local Functions
-  // Callabck triggered by submit button
+  // MAKR: local functions
   const handleGetTutorial = (e) => {
     e.preventDefault(); // Avoid refreshing automatically on submit
     dispatch(getTutorial("Lesson" + e.target.id, setTutorial));
