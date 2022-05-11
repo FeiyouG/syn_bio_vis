@@ -64,6 +64,8 @@ are welcomed.
 
 ### For developers
 
+In order to switch the server target between local and remote server development, change the simUrl and tutorUrl in the /syn_bio_vis/client/src/api/index.js file.
+
 ### For Educators
 
 Each tutorial page is written
