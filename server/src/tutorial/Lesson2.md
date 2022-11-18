@@ -11,3 +11,9 @@ Introduction to Molecular Programming
 * **Lesson 5: Exploring Circuit design**
 * **Lesson 6: In The Lab**
 * **Lesson 7: In The World**
+
+## Introduction
+
+DNA strand displacement (aka DSD) is a type of molecular computation that takes advantage of the complementarity of DNA base pairs to perform computations. This page displays a simulation of what we understand about the overall behavior of DNA as it binds to another strand.
+
+Below the visualization, you'll find more detail about what is happening in the visualization to enable molecular computation.
