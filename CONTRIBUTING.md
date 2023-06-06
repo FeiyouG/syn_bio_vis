@@ -109,5 +109,19 @@ The visualizations are defined in a json file, which includes a list of ```stran
 
 In order to represent the conformation, dot-paren-plus notation is used, which is best-described in the NUPACK documentation under [Secondary Structure](https://docs.nupack.org/definitions/#:~:text=following%20three%20sections.-,Dot%2Dparens%2Dplus%20notation,3%2C%20and%204%20are%20unpaired.).
 
+### 2022-2023 Contributing Updates
+
+"naisha" branch:
+- Created a flowchart for editors to better understand the SDSimulation file code: https://difficult-sneezeweed-0d6.notion.site/Molecular-Programming-Research-Flowchart-dc757d379b18432d85566df690a34fc5?pvs=4
+- Utilized console.log() to debug issues
+- Current stop point: seeing if proposed simulation file function will make simulation file dynamic rather than hard-coded
+- More detailed explanation of errors, resolves, and proposals here: https://docs.google.com/document/d/16yEl1n_GTjkFpTKGKoGOK1sqLPDs-D-L5LpGUGZRNL0/edit?usp=sharing
+
+*Written by Naisha Sinha, Computer Science (Data Science) at University of Washington - Seattle*
+
+
+
+
+
 
 
