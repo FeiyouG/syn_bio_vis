@@ -117,7 +117,6 @@ In order to represent the conformation, dot-paren-plus notation is used, which i
 - Current stop point: seeing if proposed simulation file function will make simulation file dynamic rather than hard-coded
 - More detailed explanation of errors, resolves, and proposals here: https://docs.google.com/document/d/16yEl1n_GTjkFpTKGKoGOK1sqLPDs-D-L5LpGUGZRNL0/edit?usp=sharing
 
-*Written by Naisha Sinha, Computer Science (Data Science) at University of Washington - Seattle*
 
 
 
