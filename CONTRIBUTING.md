@@ -117,10 +117,8 @@ In order to represent the conformation, dot-paren-plus notation is used, which i
 - Current stop point: seeing if proposed simulation file function will make simulation file dynamic rather than hard-coded
 - More detailed explanation of errors, resolves, and proposals here: https://docs.google.com/document/d/16yEl1n_GTjkFpTKGKoGOK1sqLPDs-D-L5LpGUGZRNL0/edit?usp=sharing
 
-
-
-
-
-
-
-
+"henna" branch:
+- Created a flowchart for editors to better understand the Google Colab code (nupack.ipynb): https://highfalutin-comma-83f.notion.site/Molecular-Programming-Research-Flowchart-6f9334a0c51a4993b32bed6cd822cbe6?pvs=4
+- Switched to NUPACK from multistrand to create data for DNA strand visualizations with analysis in test tube simulations
+- Current stop point: Working script that compares neighboring/paired strands determined by specific changes in generated dot-parens-plus notation; JSON files
+- Future steps: Plan to integrate the new JSON files into the interactive learning tool
