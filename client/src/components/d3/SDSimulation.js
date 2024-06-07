@@ -8,8 +8,19 @@ import { useD3 } from '../../hooks/useD3';
 
 function SDSimulation(props) {
 
+  console.log("Hello, world!");
+
+  console.log(props);
+  console.log(props.data)
+
   // Parse data
   const data = parseData(props.data);
+
+  // Hack for debugging - redefine data
+
+  // data = {}
+
+  console.log(data);
 
   // uuid allows multiple simulation to be rendered on the same page
   const simId = props.id ?? uuid()
@@ -109,20 +120,21 @@ function SDSimulation(props) {
           checked={educationMode}
           onChange={toggleEducationMode}
           disabled={true}
-          uncheckedIcon=""
-          checkedIcon=""
+          uncheckedIcon={true}
+          checkedIcon={true}
           height={20}
           width={40}
         />
       </label>
     </div >
   )
+
 }
 
 function drawController(svg, data, id, constants, callback) {
   if (data.message != null) return
 
-  const metadata = data.metadata;
+  // const metadata = data.metadata;
   const snapshots = data.snapshots;
 
   // Constants
@@ -153,14 +165,14 @@ function drawEnergyPlot(svg, data, id, constants) {
   if (data.message != null) return
 
   const snapshots = data.snapshots;
-  const metadata = data.metadata;
+  // const metadata = data.metadata;
 
   // Constants
   const size = constants.size
   const margin = constants.margin
   const translate = constants.translate ?? { x: 0, y: 0 }
 
-  const stroke_width = 1;
+  // const stroke_width = 1;
   const axis_text_size = 10;
   const dots_radius = 5
   const inidcator_radius = 10
@@ -197,7 +209,7 @@ function drawEnergyPlot(svg, data, id, constants) {
     .attr('fill', 'black')
     .attr('font-size', axis_text_size)
     .attr('font-weight', 'bold')
-    .text('Energy (unit)');
+    .text('Energy (u)');
 
   // Place the plot in the right origin
   svg.select("#energyPlot-" + id)
@@ -255,11 +267,16 @@ function drawEnergyPlot(svg, data, id, constants) {
 * Draw a strand displacement simulation using data onto svg
 */
 function drawSimulation(svg, data, id, constants) {
+  console.log(svg); 
+  console.log(data); // metadata, with strands and snapshots fields
+  console.log(id);
+  console.log(constants); // size, with height and width fields
   if (data.message != null) return
 
   const metadata = data.metadata;
   const snapshots = data.snapshots;
-
+  console.log(metadata); // strands
+  console.log(snapshots); // the array holding conformation, state, energy, and time
   // Constants
   const size = constants.size
 
@@ -271,6 +288,24 @@ function drawSimulation(svg, data, id, constants) {
 
   const color = d3.scaleOrdinal(d3.schemePastel2)
 
+  /** NEW ALGORITHM UPDATES */
+
+  function initializeNodes(i) {
+    var nodes = snapshots[i].state.map((d, index) => {
+        return { 
+            name: d.na_name, 
+            id: d.id, 
+            strand_id: d.strand_id,
+            x: Math.random() * size.width, // Initialize nodes with random positions
+            y: Math.random() * size.height
+        }
+    });
+      return nodes;
+  }
+
+  var nodes = initializeNodes(0); // Initialize nodes with the first snapshot
+
+  /** END */
 
   // // Construct the slider
   // const slider = sliderTop()
@@ -286,9 +321,16 @@ function drawSimulation(svg, data, id, constants) {
   //   .call(slider);
 
   // var nodes = map(snapshots.state, d => d.na_name);
-  var nodes = snapshots[0].state.map(d => {
-    return { name: d.na_name, id: d.id, strand_id: d.strand_id }
-  });
+
+  /** Commented out for UPDATE */
+
+  // var nodes = snapshots[0].state.map(d => { // takes the data in the 0th index of the snapshots array
+  //   console.log(d.na_name);
+  //   return { name: d.na_name, id: d.id, strand_id: d.strand_id }
+  // });
+
+  console.log("nodes");
+  console.log(nodes);
 
   var links = get_links(0)
 
@@ -307,52 +349,116 @@ function drawSimulation(svg, data, id, constants) {
 
 
   function get_links(i) {
+    // bp_links is "base pair links" - red links
     var bp_links = snapshots[i].state
-      .filter(d => d.bp_link != undefined)
+      .filter(d => d.bp_link !== undefined)
       .map(d => {
         return { source: d.id, target: d.bp_link, type: "bp_link", strand_id: d.strand_id }
-      })
+      });
+    console.log("base pair links:")
+    console.log(bp_links);
+
+    // bb_links is "backbone links" - links on the same strand
+    /** ORIGINAL BB_LINKS FUNCTION */
 
     var bb_links = snapshots[i].state
-      .filter(d => d.bb_link != undefined)
+      .filter(d => d.bb_link !== undefined)
       .map(d => {
         return { source: d.id, target: d.bb_link, type: "bb_link", strand_id: d.strand_id }
 
       });
 
+    console.log("back bone links:")
+    console.log(bb_links);
     return bp_links.concat(bb_links);
 
   }
 
   function filter_links(type) {
-    return links.filter(d => d.type == type)
+    return links.filter(d => d.type === type)
   }
 
   // Callback of force simulation
   function ticked() {
 
     // Base pair links
+
+    /** ORIGINAL BASE-PAIR LINKS FUNCTION */
+
+    // var bp_links = svg.select('.bp_links-' + id)
+    //   .selectAll('line')
+    //   .data(filter_links("bp_link"))
+    // bp_links
+    //   .enter()
+    //   .append('line')
+
+    // bp_links
+    //   .attr('x1', d => d.source.x)
+    //   .attr('y1', d => d.source.y)
+    //   .attr('x2', d => d.target.x)
+    //   .attr('y2', d => d.target.y)
+    //   .style("stroke", "red")
+    //   .style("stroke-width", bp_width)
+    //   .style("stroke-dasharray", "2, 2, 2")
+
+    // bp_links
+    //   .exit()
+    //   .remove();
+
+    /** NEW BASE-PAIR LINKS FUNCTION - SUCCESSFULLY REMOVED LINKS */
+
     var bp_links = svg.select('.bp_links-' + id)
       .selectAll('line')
       .data(filter_links("bp_link"))
+
     bp_links
       .enter()
       .append('line')
-
-    bp_links
-      .attr('x1', d => d.source.x)
-      .attr('y1', d => d.source.y)
-      .attr('x2', d => d.target.x)
-      .attr('y2', d => d.target.y)
-      .style("stroke", "red")
-      .style("stroke-width", bp_width)
-      .style("stroke-dasharray", "2, 2, 2")
+      .merge(bp_links)
+      .each(function(d) {
+        // Check if target name is defined
+        if (d.target.name !== undefined && d.source.name !== undefined) {
+          d3.select(this)
+            .attr('x1', d => d.source.x)
+            .attr('y1', d => d.source.y)
+            .attr('x2', d => d.target.x)
+            .attr('y2', d => d.target.y)
+            .style("stroke", "red")
+            .style("stroke-width", bp_width)
+            .style("stroke-dasharray", "2, 2, 2")
+        }
+      });
 
     bp_links
       .exit()
       .remove();
 
     // Backbone links
+
+    /** ORIGINAL BB_LINKS FUNCTION */
+
+    // var bb_links = svg.select('.bb_links-' + id)
+    //   .selectAll('line')
+    //   .data(filter_links("bb_link"))
+
+    // bb_links
+    //   .enter()
+    //   .append("line")
+
+    // bb_links
+    //   .attr('x1', d => d.source.x)
+    //   .attr('y1', d => d.source.y)
+    //   .attr('x2', d => d.target.x)
+    //   .attr('y2', d => d.target.y)
+    //   .style("stroke-width", bb_width)
+    //   .style("stroke", d => color(d.strand_id))
+
+    // bb_links
+    //   .exit()
+    //   .remove()
+
+    /** NEW BB_LINKS FUNCTION - SUCCESSFULLY REMOVED LINKS */
+
     var bb_links = svg.select('.bb_links-' + id)
       .selectAll('line')
       .data(filter_links("bb_link"))
@@ -360,47 +466,108 @@ function drawSimulation(svg, data, id, constants) {
     bb_links
       .enter()
       .append("line")
-
-    bb_links
-      .attr('x1', d => d.source.x)
-      .attr('y1', d => d.source.y)
-      .attr('x2', d => d.target.x)
-      .attr('y2', d => d.target.y)
-      .style("stroke-width", bb_width)
-      .style("stroke", d => color(d.strand_id))
+      .merge(bb_links)
+      .each(function(d) {
+        // Check if target name is defined
+        if (d.target.name !== undefined) {
+          d3.select(this)
+            .attr('x1', d => d.source.x)
+            .attr('y1', d => d.source.y)
+            .attr('x2', d => d.target.x)
+            .attr('y2', d => d.target.y)
+            .style("stroke-width", bb_width)
+            .style("stroke", d => color(d.strand_id))
+        }
+      });
 
     bb_links
       .exit()
-      .remove()
+      .remove();
+
+
 
     // Nodes
-    // Prevent nodes fly outside of the screen
-    svg.select('.nodes-' + id)
-      .selectAll('circle')
-      .data(nodes)
-      .join('circle')
-      .attr('cx', d => d.x = Math.max(na_radius, Math.min(size.width - na_radius, d.x)))
-      .attr('cy', d => d.y = Math.max(na_radius, Math.min(size.width - na_radius, d.y)))
-      .attr('r', na_radius)
-      .style('fill', d => color(d.strand_id))
 
-    // Node texts
-    svg.select('.nodes-' + id)
-      .selectAll('text')
-      .data(nodes)
-      .join('text')
-      .text(d => d.name)
-      .attr('x', d => d.x)
-      .attr('y', d => d.y)
-      .attr('dy', () => 5)
-      .style("font-size", na_fontSize)
-      .style("fill", "white")
-      .style("text-anchor", "middle")
-  }
+    // AGTC
+
+      // Source: A, Target: G
+      // S: G, T:C
+      // Source: C, Target: node.next = undefined
+
+    /** OLD CODE TO DRAW NODES */
+    // Prevent nodes fly outside of the screen
+    // svg.select('.nodes-' + id)
+    //   .selectAll('circle')
+    //   .data(nodes)
+    //   .join('circle')
+    //   .attr('cx', d => d.x = Math.max(na_radius, Math.min(size.width - na_radius, d.x)))
+    //   .attr('cy', d => d.y = Math.max(na_radius, Math.min(size.width - na_radius, d.y)))
+    //   .attr('r', na_radius)
+    //   .style('fill', d => color(d.strand_id))
+
+    // // Node texts
+    // svg.select('.nodes-' + id)
+    //   .selectAll('text')
+    //   .data(nodes)
+    //   .join('text')
+    //   .text(d => d.name)
+    //   .attr('x', d => d.x)
+    //   .attr('y', d => d.y)
+    //   .attr('dy', () => 5)
+    //   .style("font-size", na_fontSize)
+    //   .style("fill", "white")
+    //   .style("text-anchor", "middle")
+
+    /** NEW CODE TO DRAW NODES */
+
+      // Prevent nodes fly outside of the screen and exclude nodes with undefined names
+      var filteredNodes = nodes.filter(d => d.name !== undefined);
+
+      // Bind data to circles
+      var nodeCircles = svg.select('.nodes-' + id)
+        .selectAll('circle')
+        .data(filteredNodes, d => d.id);
+
+      // Enter new circles
+      nodeCircles
+        .enter()
+        .append('circle')
+        .merge(nodeCircles)
+        .attr('cx', d => d.x = Math.max(na_radius, Math.min(size.width - na_radius, d.x)))
+        .attr('cy', d => d.y = Math.max(na_radius, Math.min(size.width - na_radius, d.y)))
+        .attr('r', na_radius)
+        .style('fill', d => color(d.strand_id));
+
+      // Exit removed circles
+      nodeCircles.exit().remove();
+
+      // Node texts
+      var nodeTexts = svg.select('.nodes-' + id)
+        .selectAll('text')
+        .data(filteredNodes, d => d.id);
+
+      // Enter new texts
+      nodeTexts
+        .enter()
+        .append('text')
+        .merge(nodeTexts)
+        .text(d => d.name)
+        .attr('x', d => d.x)
+        .attr('y', d => d.y)
+        .attr('dy', () => 5)
+        .style("font-size", na_fontSize)
+        .style("fill", "white")
+        .style("text-anchor", "middle");
+
+      // Exit removed texts
+      nodeTexts.exit().remove();
+      }
 
   // Call back by slider when a new state is set
   return function(i) {
+    nodes = initializeNodes(i); // re-initialize nodes
     links = get_links(i)
+    simulation.nodes(nodes); // new updates
     simulation.force("link").links(links)
     simulation.alpha(0.05).restart()
   }
@@ -454,12 +621,24 @@ function parseData(data) {
   for (var i = 0; i < data.conformation.length; i++) {
     var snapshot = {}
     snapshot.conformation = data.conformation[i];
+
+    console.log("snapshot conformation:");
+    console.log(snapshot.conformation);
+
+    console.log("data.strands: ");
+    console.log(data.strands);
+
     snapshot.state = parseDotParen(snapshot.conformation, data.strands);
+
+    console.log(snapshot.state);
     // console.log(parseDotParen2(snapshot.conformation, data.strands));
     snapshot.energy = data.energy[i];
     snapshot.time = Math.round(data.time[i] * 1000000000); // Convert to nanosecond
     res.snapshots.push(snapshot);
   }
+
+  console.log("state after:");
+  console.log(snapshot.state);
 
   return res;
 }
@@ -510,7 +689,7 @@ function parseDotParen(dotParen, strands) {
       var na_state = {}                            // nucleic_acid state
 
       // The dot-paren conformation for every the other strand is reversed.
-      na_state.na_id = i % 2 == 0 ? j : conformation.length - j - 1;
+      na_state.na_id = i % 2 === 0 ? j : conformation.length - j - 1;
       na_state.strand_id = i;
       na_state.na_name = strands[i][na_state.na_id];
       na_state.id = id + na_state.na_id;
@@ -519,9 +698,9 @@ function parseDotParen(dotParen, strands) {
         na_state.bb_link = na_state.id + 1;      // Backbone link
       }
 
-      if (note == "(") {                        // Base pair link
+      if (note === "(") {                        // Base pair link
         stack.push(na_state);
-      } else if (note == ")") {
+      } else if (note === ")") {
         var comp_na = stack.pop();
         na_state.bp_link = comp_na.id;
         comp_na.bp_link = na_state.id;
