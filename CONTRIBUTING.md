@@ -43,7 +43,7 @@ are welcomed.
 │       ├── components                # React components
 │       │   ├── d3                    # Rendering simulation using d3
 │       │   ├── simulation            # Simulation page
-│       │   └── tutorial              # Tutorial page
+│       │   └── tutorial              # Tutorial page - can change DNA structure files within tutorial/index.js
 │       ├── constants
 │       ├── hooks                     # Custom hooks defined here
 │       ├── index.js
@@ -62,9 +62,11 @@ are welcomed.
     └── utils                         # Some utility functions
 ```
 
-### For developers
+### For Developers
 
 In order to switch the server target between local and remote server development, change the simUrl and tutorUrl in the /syn_bio_vis/client/src/api/index.js file.
+
+To change the DNA file simulations, simply change the file name within the `handleGetSim` function in `client/src/tutorial.index.js`.
 
 ### For Educators
 
@@ -122,3 +124,10 @@ In order to represent the conformation, dot-paren-plus notation is used, which i
 - Switched to NUPACK from multistrand to create data for DNA strand visualizations with analysis in test tube simulations
 - Current stop point: Working script that compares neighboring/paired strands determined by specific changes in generated dot-parens-plus notation; JSON files
 - Future steps: Plan to integrate the new JSON files into the interactive learning tool
+
+### 2023-2024 Contributing Updates
+
+"naisha" branch:
+- Successfully re-developed the JavaScript simulation algorithm to accommodate variations in DNA structure sizes and debugged code errors discovered identified earlier. As a simple blueprint, this can be built on upon by other developers later.
+- Allow for the integration the front-end interface of the prototype with NUPACK
+- Updated documentation and markdown files for future users to better understand how to use the software
