@@ -33,7 +33,10 @@ function Simulation() {
     data.append('pilFile', fileList[0])
 
     dispatch(runSim(data, setSimData))
+
+    console.log("handleSubmit was called");
   }
+
 
   // Callback triggered by clear button
   const handleReset = (e) => {

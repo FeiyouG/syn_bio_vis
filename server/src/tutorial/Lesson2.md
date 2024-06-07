@@ -61,6 +61,12 @@ Short (toehold) domains, or 3-7 adjacent nucleotides bind to complementary domai
 
 Through rational design of these reactions, they can be chained together in cascades to create more complex molecular circuits.
 
+```SDSimulation
+{
+  "name": "example"
+}
+```
+
 ### The Energy Landscape
 
 This interactive visualization simulates a toehold-mediated DSD reaction and its corresponding energy landscape as the chemical reaction progresses from start to finish.
