@@ -68,6 +68,14 @@ In order to switch the server target between local and remote server development
 
 To change the DNA file simulations, simply change the file name within the `handleGetSim` function in `client/src/tutorial.index.js`.
 
+```
+  const handleGetTutorial = (e) => {
+    e.preventDefault(); // Avoid refreshing automatically on submit
+    dispatch(getTutorial("Lesson" + e.target.id, setTutorial));
+    handleGetSim("example", setSimData)
+  }
+```
+
 ### For Educators
 
 Each tutorial page is written
