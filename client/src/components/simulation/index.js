@@ -55,7 +55,7 @@ function Simulation() {
         <fieldset disabled>
           <legend>Manual Input (WIP)</legend>
           <fieldset>
-            <legend>DOMINS</legend>
+            <legend>DOMAINS</legend>
             <div>
               <label>Domain 1: </label>
               <input type="text" size={25} placeholder="Enter a sequence of A,T,C,G" />

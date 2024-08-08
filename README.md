@@ -91,6 +91,28 @@ in port `3000` by default. But if `3000` is in use, it can automatically
 redirect to another port.
 
 
+## How to Use the Website
+1. **Simulation Page**: 
+This page is designed for users to input their own DNA strand data, either by entering it manually (this feature is still being developed) or by uploading a file. Here’s how you can use the different sections:
+
+   - **DOMAINS**: Enter two separate sequences of DNA bases. These sequences should only include the letters A, T, C, and G, which stand for the four nucleotides in DNA: Adenine, Thymine, Cytosine, and Guanine. Each sequence should be typed into its own text box.
+   
+   - **STRANDS**: Enter names for the domains you have provided. List these names separated by commas. This helps identify which sequences correspond to which names.
+
+   - **Complexes**: Provide names for the strands, also separated by commas. This section helps link the strands you defined earlier into complexes that will be analyzed together.
+
+   Alternatively, you can upload a `.pil` file containing your DNA data, and the system will automatically extract and organize all the necessary components from the file.
+
+2. **Tutorial Page**:
+For all three tutorials, you will find brief explanations of the key concepts related to the simulations. These can help with studying or guide further personal research. 
+
+   - **Simulation Interactions**: Use the slider to adjust the Free Energy and observe how it affects the DNA strand's shape and structure. You can experiment with different DNA strand sizes, shapes, and formations. 
+
+   - **For Users**: You can perform these experiments directly through the simulation pages.
+
+   - **For Developers**: You can clone the repository and explore the code in the `index.js` files. More information about this process can be found in the `CONTRIBUTING.md` file.
+
+
 ## Contribute to this project
 Please refer to [CONTRIBUTING.md](https://github.com/FeiyouG/syn_bio_vis/blob/main/CONTRIBUTING.md)
 if you want to contribute to this project.
